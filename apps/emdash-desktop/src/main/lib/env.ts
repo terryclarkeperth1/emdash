@@ -3,13 +3,6 @@ import { log } from './logger';
 
 const buildSchema = z.object({
   VITE_BUILD: z.enum(['canary', 'prod']).default('prod'),
-  VITE_FEEDBACK_RELAY_URL: z.string().optional(),
-});
-
-// Dev-only overrides: read from process.env (supports non-VITE_ prefixed vars,
-// loaded from .env.local via electron-vite's envDir but never shipped in prod)
-const devSchema = z.object({
-  FEEDBACK_RELAY_URL: z.string().optional(),
 });
 
 function parseSection<T extends z.ZodRawShape>(
@@ -27,7 +20,4 @@ function parseSection<T extends z.ZodRawShape>(
 
 export const env = {
   build: parseSection(buildSchema, import.meta.env as unknown as Record<string, unknown>, 'build'),
-  dev: import.meta.env.DEV
-    ? parseSection(devSchema, process.env, 'dev')
-    : ({} as z.infer<typeof devSchema>),
 };

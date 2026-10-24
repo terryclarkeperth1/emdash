@@ -15,13 +15,19 @@ export function createAccountWireController(
 ): Controller {
   return createController(accountContract, {
     getSession: () => getSession(service, dependencies.logger),
-    signIn: ({ provider, accountId }) => signIn(service, dependencies, provider, accountId),
-    linkProviderAccount: ({ provider, accountId }) =>
-      linkProviderAccount(service, dependencies, provider, accountId),
+    // This fork never signs in to, links with or pings the Emdash account server.
+    signIn: async () => ACCOUNT_SIGN_IN_DISABLED,
+    linkProviderAccount: async () => ACCOUNT_SIGN_IN_DISABLED,
     signOut: () => signOut(service, dependencies),
-    checkHealth: () => service.checkServerHealth(),
+    checkHealth: async () => false,
   });
 }
+
+const ACCOUNT_SIGN_IN_DISABLED = {
+  success: false,
+  code: 'disabled',
+  error: 'Emdash account sign-in is disabled in this build',
+};
 
 async function getSession(service: EmdashAccountService, logger: Logger) {
   const result = await service.getSession();
@@ -30,53 +36,6 @@ async function getSession(service: EmdashAccountService, logger: Logger) {
     return { user: null, isSignedIn: false, hasAccount: false };
   }
   return result.data;
-}
-
-async function signIn(
-  service: EmdashAccountService,
-  dependencies: AccountControllerDependencies,
-  provider?: string,
-  accountId?: string
-) {
-  const result = await service.signIn(provider, { accountId });
-  if (!result.success) {
-    dependencies.logger.error('Account sign-in failed', { error: result.error });
-    return {
-      success: false,
-      code: result.error.type,
-      error: result.error.message,
-    };
-  }
-
-  dependencies.telemetry.capture('user_signed_in');
-  return { success: true, user: result.data.user };
-}
-
-async function linkProviderAccount(
-  service: EmdashAccountService,
-  dependencies: AccountControllerDependencies,
-  provider?: string,
-  accountId?: string
-) {
-  const result = await service.linkProviderAccount(provider, { accountId });
-  if (!result.success) {
-    if (result.error.type !== 'session_expired') {
-      dependencies.logger.error('Provider account link failed', { error: result.error });
-    }
-    return {
-      success: false,
-      code: result.error.type,
-      error: result.error.message,
-    };
-  }
-
-  dependencies.telemetry.capture('integration_connected', { provider: result.data.provider });
-  return {
-    success: true,
-    provider: result.data.provider,
-    providerAccountStatus: result.data.providerAccountStatus,
-    providerAccount: result.data.providerAccount,
-  };
 }
 
 async function signOut(service: EmdashAccountService, dependencies: AccountControllerDependencies) {
