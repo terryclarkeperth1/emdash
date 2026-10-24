@@ -36,7 +36,7 @@ const telemetryEnabled = z
   .string()
   .optional()
   .transform((value) => {
-    const normalized = (value ?? 'true').toLowerCase();
+    const normalized = (value ?? 'false').toLowerCase();
     return normalized !== 'false' && normalized !== '0' && normalized !== 'no';
   });
 

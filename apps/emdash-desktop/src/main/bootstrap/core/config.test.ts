@@ -7,7 +7,7 @@ describe('loadAppConfig', () => {
 
     expect(config.dbFile).toBeUndefined();
     expect(config.disableNativeDb).toBe(false);
-    expect(config.telemetryEnabled).toBe(true);
+    expect(config.telemetryEnabled).toBe(false);
     expect(config.installSource).toBeUndefined();
     expect(config.forceBootFailure).toBe(false);
   });

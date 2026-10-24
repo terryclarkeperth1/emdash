@@ -35,8 +35,9 @@ const PERF_SESSION_SAMPLE_RATE = 0.05;
 
 class DesktopTelemetryService implements Disposable, TelemetryServicePort {
   private enabled = true;
-  private apiKey: string | undefined;
-  private host: string | undefined;
+  // This fork ships no PostHog key or host, so isEnabled() is always false.
+  private readonly apiKey: string | undefined = undefined;
+  private readonly host: string | undefined = undefined;
   private instanceId: string | undefined;
   private installSource: string | undefined;
   private userOptOut: boolean | undefined;
@@ -216,15 +217,6 @@ class DesktopTelemetryService implements Disposable, TelemetryServicePort {
     return sanitized;
   }
 
-  private normalizeHost(h: string | undefined): string | undefined {
-    if (!h) return undefined;
-    let s = String(h).trim();
-    if (!/^https?:\/\//i.test(s)) {
-      s = 'https://' + s;
-    }
-    return s.replace(/\/+$/, '');
-  }
-
   // ---------------------------------------------------------------------------
   // PostHog transport
   // ---------------------------------------------------------------------------
@@ -349,9 +341,6 @@ class DesktopTelemetryService implements Disposable, TelemetryServicePort {
     this.appVersion = options?.appVersion ?? 'unknown';
     this.isPackaged = options?.isPackaged ?? false;
     this.enabled = !isViteDevBuild && config.telemetryEnabled;
-    // build value wins (prod); dev fallback used locally without VITE_ vars set
-    this.apiKey = appEnv.build.VITE_POSTHOG_KEY ?? appEnv.dev.POSTHOG_PROJECT_API_KEY;
-    this.host = this.normalizeHost(appEnv.build.VITE_POSTHOG_HOST ?? appEnv.dev.POSTHOG_HOST);
     this.installSource = config.installSource ?? options?.installSource;
     this.sessionId = randomUUID();
 
