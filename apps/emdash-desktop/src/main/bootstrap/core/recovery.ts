@@ -39,6 +39,6 @@ function registerSafeModeQuitHandler(): void {
   if (safeModeQuitHandlerRegistered) return;
   safeModeQuitHandlerRegistered = true;
   // Intentionally do not prevent the event. Normal shutdown services were not
-  // initialized, and electron-updater must be allowed to install on app quit.
+  // initialized.
   app.on('before-quit', () => {});
 }

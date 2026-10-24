@@ -35,11 +35,3 @@ export function formatUpdaterError(error: unknown): string {
   const summary = getUpdaterErrorDetails(error).split('\n')[0];
   return summary.length > 240 ? `${summary.slice(0, 240)}…` : summary;
 }
-
-export function sanitizeUpdaterLogArgs(args: unknown[]) {
-  return args.map((arg) => {
-    if (arg instanceof Error) return formatUpdaterError(arg);
-    if (typeof arg === 'string') return formatUpdaterError(arg);
-    return arg;
-  });
-}
