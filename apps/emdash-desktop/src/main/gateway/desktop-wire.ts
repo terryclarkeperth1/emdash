@@ -45,7 +45,8 @@ export function installDesktopWire(): void {
  * webviews, iframes and navigated-away pages cannot reach the main-process controllers.
  */
 export function assertRendererSender(event: IpcMainInvokeEventLike): void {
-  const frame = (event as Partial<Pick<IpcMainInvokeEvent, 'senderFrame'>>).senderFrame;
+  const { senderFrame: frame } = event as IpcMainInvokeEventLike &
+    Partial<Pick<IpcMainInvokeEvent, 'senderFrame'>>;
   const origin = (
     import.meta.env.DEV ? (process.env.ELECTRON_RENDERER_URL ?? '') : APP_ORIGIN
   ).replace(/\/+$/, '');
