@@ -13,7 +13,9 @@ Terry's hardened fork of Emdash (upstream `generalaction/emdash`), an Electron a
 From `C:\Emdash\apps\emdash-desktop`: `pnpm run dev`. Debug log: `apps\emdash-desktop\.emdash-logs\emdash.log` (`LOG_LEVEL=debug`).
 
 ## Tests
-`cmd /c "pnpm exec nx run-many -t typecheck --all"`; tests `cmd /c "pnpm exec nx run-many -t test --all --output-style=static"` (187 Windows failures match the upstream baseline at `e21cd3d84`).
+- Push gate: runs only the vitest files a change reaches, plus the touched package's nx typecheck (about 20-40 s).
+- Full suite on Linux (upstream's CI platform; 4 failures were ours and are fixed, 0 left): Ubuntu-24.04 WSL clone `~/emdash`, pnpm at `~/.local/bin/pnpm`. `wsl -d Ubuntu-24.04 --cd ~ -- bash -lc 'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin; cd emdash && git fetch -q /mnt/c/Emdash claude/security-hardening-16bc9d && git reset -q --hard FETCH_HEAD && pnpm exec nx run-many -t test --all'` (core 17 s, desktop 44 s).
+- On Windows the same suite has 331 upstream failures (POSIX paths, shells); a test fixed for Windows keeps its Linux behaviour.
 
 ## Core files
 - `apps/emdash-desktop/src/core/features/*/contributions/settings.ts`: app setting defaults.
