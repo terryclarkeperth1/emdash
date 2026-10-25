@@ -118,7 +118,7 @@ describe('portLegacySettings', () => {
     fs.writeFileSync(
       path.join(userDataDir, 'settings.json'),
       JSON.stringify({
-        repository: { branchPrefix: 'legacy-prefix', pushOnCreate: false },
+        repository: { branchPrefix: 'legacy-prefix', pushOnCreate: true },
         projects: { defaultDirectory: '/legacy/projects' },
         tasks: {
           autoGenerateName: false,
@@ -205,7 +205,7 @@ describe('portLegacySettings', () => {
     expect(localProject.defaultProjectsDirectory).toBe('/beta/projects');
     const project = readRawSetting(appSqlite, 'project') as Record<string, unknown>;
     expect(project.branchPrefix).toBe('legacy-prefix');
-    expect(project.pushOnCreate).toBe(false);
+    expect(project.pushOnCreate).toBe(true);
 
     expect(readRawSetting(appSqlite, 'tasks')).toEqual({
       autoGenerateName: false,

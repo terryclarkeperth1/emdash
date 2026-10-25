@@ -89,12 +89,12 @@ describe('provider settings persistence', () => {
     await service.patch(local, { transport: 'acp', options: { model: 'new-cli-model' } });
     for (const key of [remoteScope, { ...local, providerId: 'claude' }])
       expect((await service.read(key)).acp.options).toEqual({});
-    expect((await service.read(local)).pty).toEqual({ version: '1', autoApprove: false });
+    expect((await service.read(local)).pty).toEqual({ version: '1', autoApprove: true });
     await service.patch(local, {
       transport: 'pty',
-      autoApprove: true,
+      autoApprove: false,
     });
-    expect((await service.read(local)).pty).toEqual({ version: '1', autoApprove: true });
+    expect((await service.read(local)).pty).toEqual({ version: '1', autoApprove: false });
   });
 
   it('merges concurrent field patches and remembers native default choices', async () => {
@@ -164,7 +164,7 @@ describe('provider settings persistence', () => {
     const now = vi.spyOn(Date, 'now');
     try {
       await service.patch(local, { transport: 'acp', options: { model: 'local-choice' } });
-      await service.patch(local, { transport: 'pty', autoApprove: true });
+      await service.patch(local, { transport: 'pty', autoApprove: false });
       await service.patch(remoteScope, { transport: 'acp', options: { effort: 'high' } });
       now.mockReturnValue(1_000);
       await service.observeCatalog(local, {
@@ -196,7 +196,7 @@ describe('provider settings persistence', () => {
       const borrowed = await service.read(remoteScope);
       expect(borrowed.catalogs).toEqual([[model('c')], [model('b')]]);
       expect(borrowed.acp.options).toEqual({ effort: 'high' });
-      expect(borrowed.pty.autoApprove).toBe(false);
+      expect(borrowed.pty.autoApprove).toBe(true);
       expect((await service.read(local)).catalogs).toEqual([[model('a')]]);
       expect((await service.read({ ...remoteScope, providerId: 'claude' })).catalogs).toEqual([]);
 

@@ -171,12 +171,12 @@ describe('SettingsStore contributions', () => {
   });
 
   it('reports scalar overrides without returning the scalar as an overrides object', async () => {
-    rows.set('theme', JSON.stringify('emdark'));
+    rows.set('theme', JSON.stringify('emlight'));
     const settings = new SettingsStore(db, appSettingsContributions);
 
     await expect(settings.getWithMeta('theme')).resolves.toEqual({
-      value: 'emdark',
-      defaults: null,
+      value: 'emlight',
+      defaults: 'emdark',
       overrides: {},
     });
   });

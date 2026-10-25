@@ -6,7 +6,7 @@ Terry's hardened fork of Emdash (upstream `generalaction/emdash`), an Electron a
 - The upstream engineering guide is `agents/UPSTREAM.md`: read it before touching code, and the matching `agents/` page for the area.
 - Keep the hardening: no updater, telemetry off, no feedback relay or account sign-in, Claude hooks only via `--settings`, no `~/.claude.json` trust writes, no automatic remote installs or download-and-run installers, wire ports only to the renderer's top frame, no Azure signing or publish.
 - Defaults follow Terry's Claude desktop setup (dark theme, PTY auto-approve on, branch prefix `claude`, no push on create, `pwsh` terminals); Claude desktop wins where they differ.
-- Pulling upstream: merge onto this branch, then rerun the dependency scan (Trivy on `pnpm-lock.yaml`, OSV for `MAL-`) before the next launch.
+- Upstream is remote `upstream` (fetch only; push is disabled). Taking their fixes: `git fetch upstream --tags`, `git merge upstream/main` (or `git cherry-pick <sha>` for a single fix) on this branch; keep each fork change its own commit so conflicts stay small; then rerun the dependency scan (Trivy on `pnpm-lock.yaml`, OSV for `MAL-`) before the next launch.
 - No release workflows, publishing or signing.
 
 ## Run
