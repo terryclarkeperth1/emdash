@@ -1,9 +1,16 @@
 import type { PendingLease } from '@emdash/shared';
-import { exposeWireToWindows, WireError, type Controller, type LiveSource } from '@emdash/wire/rpc';
-import { ipcMain, MessageChannelMain } from 'electron';
+import {
+  exposeWireToWindows,
+  WireError,
+  type Controller,
+  type IpcMainInvokeEventLike,
+  type LiveSource,
+} from '@emdash/wire/rpc';
+import { ipcMain, MessageChannelMain, type IpcMainInvokeEvent } from 'electron';
 import { DESKTOP_WIRE_CHANNEL } from '@core/manifests/shared/wire-channels';
 import type { ControllersBundle } from '@main/bootstrap/boot/phases/controllers';
 import { appScope } from '@main/bootstrap/core/app-scope';
+import { APP_ORIGIN } from '@main/host/protocol';
 
 const scope = appScope.child('desktop-wire');
 let installed = false;
@@ -28,8 +35,24 @@ export function installDesktopWire(): void {
   scope.add(
     exposeWireToWindows({ ipcMain, createMessageChannel }, createLazyRoutingController(), {
       channel: DESKTOP_WIRE_CHANNEL,
+      beforeOpen: assertRendererSender,
     })
   );
+}
+
+/**
+ * Grants a wire port only to the top frame of a page served from the renderer origin, so
+ * webviews, iframes and navigated-away pages cannot reach the main-process controllers.
+ */
+export function assertRendererSender(event: IpcMainInvokeEventLike): void {
+  const frame = (event as Partial<Pick<IpcMainInvokeEvent, 'senderFrame'>>).senderFrame;
+  const origin = (
+    import.meta.env.DEV ? (process.env.ELECTRON_RENDERER_URL ?? '') : APP_ORIGIN
+  ).replace(/\/+$/, '');
+  const url = frame?.url ?? '';
+  if (!frame || frame.parent !== null || !origin || !url.startsWith(`${origin}/`)) {
+    throw new Error(`Refusing desktop wire port for sender ${url || '(unknown)'}`);
+  }
 }
 
 /** Provides the controllers bundle; releases any wire traffic queued so far. */

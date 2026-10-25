@@ -45,6 +45,29 @@ describe('desktop wire gateway', () => {
     for (const mock of Object.values(mocks)) mock.mockReset();
   });
 
+  it('grants wire ports only to the top frame of the renderer origin', async () => {
+    vi.stubEnv('DEV', true);
+    vi.stubEnv('ELECTRON_RENDERER_URL', 'http://localhost:5173');
+    const { assertRendererSender } = await import('./desktop-wire');
+    const sender = { id: 1, postMessage: vi.fn() };
+    const from = (url: string, parent: unknown = null) =>
+      ({ sender, senderFrame: { url, parent } }) as never;
+
+    try {
+      expect(() => assertRendererSender(from('http://localhost:5173/index.html'))).not.toThrow();
+      expect(() => assertRendererSender(from('https://example.test/'))).toThrow('Refusing');
+      expect(() => assertRendererSender(from('http://localhost:5173.example.test/'))).toThrow(
+        'Refusing'
+      );
+      expect(() => assertRendererSender(from('http://localhost:5173/frame', {}))).toThrow(
+        'Refusing'
+      );
+      expect(() => assertRendererSender({ sender })).toThrow('Refusing');
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('installs the renderer port handler before any controllers exist', async () => {
     const { installDesktopWire } = await import('./desktop-wire');
     installDesktopWire();
