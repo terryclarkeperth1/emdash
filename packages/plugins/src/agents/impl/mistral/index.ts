@@ -1,4 +1,4 @@
-import { dirname, extname, join } from 'node:path';
+import { basename, extname } from 'node:path';
 import {
   definePlugin,
   registerPluginBehavior,
@@ -92,7 +92,8 @@ export const provider = registerPluginBehavior(plugin, {
     const ext = extname(ctx.cli);
     const acpExt = ['.exe', '.cmd', '.bat', '.ps1'].includes(ext.toLowerCase()) ? ext : '';
     return {
-      command: join(dirname(ctx.cli), `vibe-acp${acpExt}`),
+      // Swap only the file name so the CLI path keeps its own separators on every OS.
+      command: `${ctx.cli.slice(0, ctx.cli.length - basename(ctx.cli).length)}vibe-acp${acpExt}`,
       args: [],
     };
   }),
