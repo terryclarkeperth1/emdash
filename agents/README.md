@@ -35,4 +35,4 @@ This directory is the system of record for agent-facing repo guidance. Keep topi
 - Prefer one page per concrete topic.
 - Avoid volatile counts unless you can verify them cheaply.
 - Link to the source-of-truth file paths.
-- Update the smallest relevant page instead of expanding `AGENTS.md`.
+- Update the smallest relevant page instead of expanding `UPSTREAM.md`.
