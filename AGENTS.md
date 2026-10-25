@@ -14,7 +14,7 @@ From `C:\Emdash\apps\emdash-desktop`: `pnpm run dev`. Debug log: `apps\emdash-de
 
 ## Tests
 - Push gate: runs only the vitest files a change reaches, plus the touched package's nx typecheck (about 20-40 s).
-- Full suite on Linux (upstream's CI platform; 4 failures were ours and are fixed, 0 left): Ubuntu-24.04 WSL clone `~/emdash`, pnpm at `~/.local/bin/pnpm`. `wsl -d Ubuntu-24.04 --cd ~ -- bash -lc 'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin; cd emdash && git fetch -q /mnt/c/Emdash claude/security-hardening-16bc9d && git reset -q --hard FETCH_HEAD && pnpm exec nx run-many -t test --all'` (core 17 s, desktop 44 s).
+- Full suite on Linux (upstream's CI platform; 4 failures were ours and are fixed, 0 left): Ubuntu-24.04 WSL clone `~/emdash`, pnpm at `~/.local/bin/pnpm`. `wsl -d Ubuntu-24.04 --cd ~ -- bash -lc 'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin NX_DAEMON=false; cd emdash && git fetch -q /mnt/c/Emdash claude/security-hardening-16bc9d && git reset -q --hard FETCH_HEAD && pnpm exec nx run-many -t test --all'; wsl --shutdown` (core 17 s, desktop 44 s). `NX_DAEMON=false` leaves no Nx helper behind, and `wsl --shutdown` stops the VM, so the fans settle.
 - On Windows the same suite has 331 upstream failures (POSIX paths, shells); a test fixed for Windows keeps its Linux behaviour.
 
 ## Core files
