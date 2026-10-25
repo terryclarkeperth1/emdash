@@ -20,7 +20,7 @@ function mockClient(list: ReturnType<typeof vi.fn>) {
   const client: FeaturebaseClient = {
     feedback: {
       posts: {
-        list,
+        list: list as FeaturebaseClient['feedback']['posts']['list'],
       },
     },
   };

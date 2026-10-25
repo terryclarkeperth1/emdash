@@ -1,6 +1,7 @@
 /** @vitest-environment jsdom */
 import { act, cleanup, fireEvent, render, waitFor } from '@testing-library/react';
 import type { Editor } from '@tiptap/core';
+import type { SuggestionProps } from '@tiptap/suggestion';
 import { StrictMode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { PromptEditor } from './prompt-editor';
@@ -186,7 +187,7 @@ describe('conversation-owned prompt editor models', () => {
       items: [],
       command: () => {},
       decorationNode: null,
-    };
+    } as Partial<SuggestionProps> as SuggestionProps;
     act(() => oldRenderer.onStart?.(props));
     expect(oldOpenChange).not.toHaveBeenCalled();
     expect(newOpenChange).not.toHaveBeenCalled();
