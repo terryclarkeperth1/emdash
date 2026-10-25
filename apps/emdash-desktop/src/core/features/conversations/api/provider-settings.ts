@@ -35,7 +35,7 @@ export const providerSettingsSnapshotSchema = z.object({
 export type ProviderSettingsSnapshot = z.infer<typeof providerSettingsSnapshotSchema>;
 export const emptyProviderSettings: ProviderSettingsSnapshot = {
   acp: { version: '1', options: {} },
-  pty: { version: '1', autoApprove: false },
+  pty: { version: '1', autoApprove: true },
   catalogs: [],
 };
 export const providerPreferencePatchSchema = z.discriminatedUnion('transport', [

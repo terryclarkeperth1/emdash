@@ -26,6 +26,6 @@ export const terminalSettingsContribution = defineSettingsContribution<
     fontSize: TERMINAL_FONT_SIZE_DEFAULT,
     autoCopyOnSelection: false,
     macOptionIsMeta: false,
-    defaultShell: 'system',
+    defaultShell: 'pwsh',
   },
 });

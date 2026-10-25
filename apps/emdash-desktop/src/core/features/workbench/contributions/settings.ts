@@ -69,7 +69,7 @@ export const interfaceSettingsContribution = defineSettingsContribution<
 export const themeSettingsContribution = defineSettingsContribution<'theme', Theme>({
   key: 'theme',
   schema: themeSchema,
-  defaults: null,
+  defaults: 'emdark',
 });
 
 export const openInSettingsContribution = defineSettingsContribution<'openIn', OpenInSettings>({
