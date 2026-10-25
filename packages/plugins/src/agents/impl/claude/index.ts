@@ -14,7 +14,6 @@ import { claudeAdapter } from './adapter';
 import { claudeAuthStatus } from './auth';
 import { buildClaudeHookConfig } from './hooks';
 import { icon } from './icon';
-import { buildClaudeTrustBehavior } from './trust';
 import { probeClaudeUsage } from './usage';
 
 export const plugin = definePlugin(
@@ -134,9 +133,6 @@ export const plugin = definePlugin(
     sessions: {
       kind: 'resumable',
     },
-    trust: {
-      kind: 'supported',
-    },
   },
   { icon }
 );
@@ -175,5 +171,4 @@ export const provider = registerPluginBehavior(plugin, {
   },
   hooks: buildClaudeHookConfig(),
   mcp: passthroughMcpAdapter('.claude.json'),
-  trust: buildClaudeTrustBehavior(),
 });
