@@ -47,6 +47,26 @@
       "cpu-features",
       "ssh2"
     ],
+    "overrides": {
+      "@mondaydotcomorg/api>zod": "^4.6.6",
+      "axios": "^1.20.0",
+      "body-parser@2": "^2.4.0",
+      "brace-expansion@1": "^1.1.20",
+      "brace-expansion@2": "^2.1.6",
+      "brace-expansion@5": "^5.0.11",
+      "browserslist": "^4.28.7",
+      "fast-uri@3": "^3.1.7",
+      "follow-redirects": "^1.16.1",
+      "form-data@4": "^4.0.6",
+      "handlebars": "^4.7.10",
+      "nanoid@3": "^3.3.18",
+      "postcss": "^8.5.18",
+      "prosemirror-view": "^1.42.3",
+      "seroval": "^1.6.3",
+      "smol-toml": "^1.7.1",
+      "source-map-js": "^1.2.2",
+      "zod@4": "^4.6.6"
+    },
     "patchedDependencies": {
       "ssh2@1.17.0": "patches/ssh2@1.17.0.patch"
     },

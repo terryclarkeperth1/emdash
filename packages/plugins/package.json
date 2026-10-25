@@ -79,6 +79,7 @@
     "@linear/sdk": "^77.0.0",
     "@llamaduck/forgejo-ts": "^14.0.3",
     "@makeplane/plane-node-sdk": "^0.2.11",
+    "@modelcontextprotocol/sdk": "^1.32.0",
     "@mondaydotcomorg/api": "^14.0.0",
     "@notionhq/client": "^5.22.0",
     "@octokit/rest": "^22.0.1",
