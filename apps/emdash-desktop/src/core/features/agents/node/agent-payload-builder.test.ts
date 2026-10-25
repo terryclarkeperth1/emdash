@@ -36,8 +36,13 @@ describe('toAgentInstallationStatus', () => {
 
 describe('buildAgentMetadataList', () => {
   it('copies provider trust capabilities into renderer metadata', () => {
-    const claude = buildAgentMetadataList().find((agent) => agent.id === 'claude');
+    const agents = buildAgentMetadataList();
 
-    expect(claude?.capabilities.trust).toEqual({ kind: 'supported' });
+    expect(agents.find((agent) => agent.id === 'cursor')?.capabilities.trust).toEqual({
+      kind: 'supported',
+    });
+    expect(agents.find((agent) => agent.id === 'claude')?.capabilities.trust).toEqual({
+      kind: 'none',
+    });
   });
 });
