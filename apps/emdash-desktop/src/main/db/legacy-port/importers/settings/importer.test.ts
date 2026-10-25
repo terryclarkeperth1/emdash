@@ -136,7 +136,7 @@ describe('portLegacySettings', () => {
         interface: {
           autoRightSidebarBehavior: true,
           taskHoverAction: 'archive',
-          theme: 'dark-black',
+          theme: 'light',
         },
         terminal: {
           fontFamily: '  Fira Code  ',
@@ -226,7 +226,7 @@ describe('portLegacySettings', () => {
         prompt: 'Review this worktree carefully.',
       },
     ]);
-    expect(readRawSetting(appSqlite, 'theme')).toBe('emdark');
+    expect(readRawSetting(appSqlite, 'theme')).toBe('emlight');
 
     const terminal = readRawSetting(appSqlite, 'terminal') as Record<string, unknown>;
     expect(terminal.autoCopyOnSelection).toBe(true);
