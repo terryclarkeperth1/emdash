@@ -5,7 +5,6 @@ import { snapshot } from '@emdash/wire/state';
 import { describe, expect, it, vi } from 'vitest';
 import { HostStateModel } from '../../state-model';
 import { WorkspaceServerProtocolError } from '../connect/protocol';
-import { WorkspaceServerInstallError } from './installer';
 import { WorkspaceServerProvisioner } from './provisioner';
 
 describe('WorkspaceServerProvisioner', () => {
@@ -55,13 +54,13 @@ describe('WorkspaceServerProvisioner', () => {
     await fixture.dispose();
   });
 
-  it('installs and starts an absent daemon before returning a ready target', async () => {
+  it('starts an absent daemon without installing it before returning a ready target', async () => {
     const fixture = createProvisionerFixture();
     fixture.dialOnce.mockRejectedValueOnce(new Error('socket missing'));
 
     await expect(fixture.provisioner.ensure()).resolves.toMatchObject({ kind: 'ssh' });
 
-    expect(fixture.installer.install).toHaveBeenCalledOnce();
+    expect(fixture.installer.install).not.toHaveBeenCalled();
     expect(fixture.daemon.start).toHaveBeenCalledOnce();
     expect(fixture.daemon.restart).not.toHaveBeenCalled();
     expect(fixture.dialOnce).toHaveBeenCalledTimes(2);
@@ -164,16 +163,14 @@ describe('WorkspaceServerProvisioner', () => {
   it('publishes typed failures and keeps them observable', async () => {
     const fixture = createProvisionerFixture();
     fixture.dialOnce.mockRejectedValueOnce(new Error('socket missing'));
-    fixture.installer.install.mockRejectedValue(
-      new WorkspaceServerInstallError('unsupported-platform', 'musl is unsupported')
-    );
+    fixture.daemon.start.mockRejectedValue(new Error('workspace server is not installed'));
 
     await expect(fixture.provisioner.ensure()).rejects.toMatchObject({
-      code: 'unsupported-platform',
+      code: 'daemon-start-failed',
     });
     expect(fixture.status('ssh-1')).toMatchObject({
       status: 'failed',
-      error: { code: 'unsupported-platform' },
+      error: { code: 'daemon-start-failed' },
     });
     await fixture.dispose();
   });
@@ -224,27 +221,26 @@ describe('WorkspaceServerProvisioner', () => {
     await fixture.dispose();
   });
 
-  it('does not start a daemon or overwrite replacement state after a cancelled install finishes', async () => {
+  it('does not overwrite replacement state after a cancelled start finishes', async () => {
     const fixture = createProvisionerFixture();
-    const installed = deferred<void>();
-    const installing = deferred<void>();
+    const started = deferred<void>();
+    const starting = deferred<void>();
     fixture.dialOnce.mockRejectedValueOnce(new Error('socket missing'));
-    fixture.installer.install.mockImplementationOnce(() => {
-      installing.resolve();
-      return installed.promise;
+    fixture.daemon.start.mockImplementationOnce(() => {
+      starting.resolve();
+      return started.promise;
     });
     const pending = fixture.provisioner.ensure();
     const rejected = expect(pending).rejects.toThrow('cancelled for ssh-1');
-    await installing.promise;
+    await starting.promise;
     const cancelling = fixture.provisioner.cancel();
 
     fixture.dialOnce.mockResolvedValue(handshake('2.0.0'));
     const replacement = await fixture.provisioner.ensure();
-    installed.resolve();
+    started.resolve();
     await cancelling;
     await rejected;
 
-    expect(fixture.daemon.start).not.toHaveBeenCalled();
     expect(fixture.status('ssh-1')).toMatchObject({ status: 'healthy', version: '2.0.0' });
     await expect(fixture.provisioner.ensure()).resolves.toBe(replacement);
     expect(fixture.dialOnce).toHaveBeenCalledTimes(2);

@@ -186,11 +186,22 @@ export function installExecutionError(
   };
 }
 
+/**
+ * This fork never offers installers that download a script and run it
+ * (`curl … | bash`, `irm … | iex`, `curl -o x && x`); package-manager options stay.
+ */
+function downloadsAndRunsScript(option: InstallCommandOption): boolean {
+  const { command } = option;
+  return /https?:\/\//i.test(command) && /\|\s*(ba|z)?sh\b|\|\s*iex\b|&&/i.test(command);
+}
+
 export function installOptionsForPlatform(
   definition: HostDependencyDefinition,
   platform: Platform = currentPlatform()
 ): InstallCommandOption[] {
-  return definition.installCommands?.[platform] ?? [];
+  return (definition.installCommands?.[platform] ?? []).filter(
+    (option) => !downloadsAndRunsScript(option)
+  );
 }
 
 export function selectInstallOption(

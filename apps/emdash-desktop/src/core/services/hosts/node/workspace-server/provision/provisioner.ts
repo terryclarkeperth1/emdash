@@ -172,8 +172,8 @@ export class WorkspaceServerProvisioner {
           break;
       }
 
-      await this.install(connectionId, layout, signal);
-      throwIfAborted(signal);
+      // This fork never downloads and runs the install script on a remote host; it only
+      // starts a workspace server that is already installed there.
       await this.start(connectionId, layout, signal);
       throwIfAborted(signal);
 

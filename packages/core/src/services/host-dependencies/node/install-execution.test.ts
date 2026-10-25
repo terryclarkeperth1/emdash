@@ -2,10 +2,45 @@ import { describe, expect, it, vi } from 'vitest';
 import type { IExecutionContext } from '#primitives/exec/api';
 import {
   buildInstallCommandInvocation,
+  installOptionsForPlatform,
   isPermissionDeniedOutput,
   resolveElevationDecision,
   resolveAutoSelection,
 } from './install-execution';
+
+describe('installOptionsForPlatform', () => {
+  it('drops installers that download a script and run it', () => {
+    const option = (method: 'curl' | 'powershell' | 'npm' | 'apt', command: string) => ({
+      method,
+      command,
+      elevation: 'never' as const,
+    });
+    const options = installOptionsForPlatform(
+      {
+        id: 'agent',
+        name: 'Agent',
+        category: 'agent',
+        binaryNames: ['agent'],
+        status: 'active',
+        installCommands: {
+          linux: [
+            option('curl', 'curl -fsSL https://example.test/install.sh | bash'),
+            option('powershell', 'powershell -c "irm https://example.test/install.ps1 | iex"'),
+            option('curl', 'curl -fsSL https://example.test/i.cmd -o i.cmd && i.cmd'),
+            option('npm', 'npm install -g agent'),
+            option('apt', 'sudo apt-get install -y curl'),
+          ],
+        },
+      },
+      'linux'
+    );
+
+    expect(options.map((o) => o.command)).toEqual([
+      'npm install -g agent',
+      'sudo apt-get install -y curl',
+    ]);
+  });
+});
 
 describe('resolveAutoSelection', () => {
   it('uses the first discovered path', () => {
