@@ -99,6 +99,8 @@ describe('claude hooks', () => {
     expect(hooks.launchArgs!(context)).toEqual([
       '--settings',
       '/home/user/.emdash/agent-hooks/claude/settings.json',
+      '--disallowedTools',
+      'RemoteTrigger,SendMessage,ListAgents,TaskStop,Monitor,PowerShell',
     ]);
   });
 

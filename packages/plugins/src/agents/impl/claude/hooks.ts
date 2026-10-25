@@ -18,6 +18,10 @@ export const CLAUDE_SETTINGS_PATH = 'settings.json';
  */
 const claudeHooksRoot = homeConfigRoot('.emdash/agent-hooks/claude');
 
+/** Tools left out of Emdash's Claude sessions to cut prompt tokens; Bash covers the shell. */
+export const CLAUDE_DISALLOWED_TOOLS =
+  'RemoteTrigger,SendMessage,ListAgents,TaskStop,Monitor,PowerShell';
+
 /**
  * Claude's Notification events carry no `notification_type` field.
  * Classify by examining the message text:
@@ -67,6 +71,8 @@ export function buildClaudeHookConfig() {
     launchArgs: (context: ConfigRootContext) => [
       '--settings',
       configFile(claudeHooksRoot, CLAUDE_SETTINGS_PATH)(context),
+      '--disallowedTools',
+      CLAUDE_DISALLOWED_TOOLS,
     ],
     parseHookEvent: parseClaudeHookEvent,
   };
