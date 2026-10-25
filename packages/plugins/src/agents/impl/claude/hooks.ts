@@ -1,14 +1,22 @@
 import type { CanonicalHookEvent } from '@emdash/core/services/agent-plugins/api/plugins';
 import {
   buildNestedJsonHookConfig,
+  configFile,
   configRoots,
   defaultHookEventParser,
-  envConfigRoot,
   extractProviderSessionId,
+  homeConfigRoot,
   makeStdinHookCommand,
+  type ConfigRootContext,
 } from '@emdash/core/services/agent-plugins/api/plugins/helpers';
 
 export const CLAUDE_SETTINGS_PATH = 'settings.json';
+
+/**
+ * Emdash's hooks live in their own settings file, loaded with `claude --settings`, so the
+ * user's ~/.claude/settings.json is never written.
+ */
+const claudeHooksRoot = homeConfigRoot('.emdash/agent-hooks/claude');
 
 /**
  * Claude's Notification events carry no `notification_type` field.
@@ -55,7 +63,11 @@ export function buildClaudeHookConfig() {
       { hookKey: 'Notification', command: makeStdinHookCommand('notification') },
       { hookKey: 'Stop', command: makeStdinHookCommand('stop') },
     ]),
-    resolveConfigRoots: configRoots(envConfigRoot('CLAUDE_CONFIG_DIR', '.claude')),
+    resolveConfigRoots: configRoots(claudeHooksRoot),
+    launchArgs: (context: ConfigRootContext) => [
+      '--settings',
+      configFile(claudeHooksRoot, CLAUDE_SETTINGS_PATH)(context),
+    ],
     parseHookEvent: parseClaudeHookEvent,
   };
 }

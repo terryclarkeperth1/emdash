@@ -10,6 +10,11 @@ export { HOOK_EVENTS } from './hooks-types';
 
 export type IHooksBehavior = {
   resolveConfigRoots(context: ConfigRootContext): string[];
+  /**
+   * CLI args that make the agent load hooks written to an Emdash-owned root instead of
+   * its own user config. Optional — absent means the agent reads its config roots itself.
+   */
+  launchArgs?(context: ConfigRootContext): string[];
   readHooks(fs: PluginFs): Promise<HookRegistration[]>;
   /** Write hooks and return the root-relative paths written. */
   writeHooks(fs: PluginFs, hooks: HookRegistration[]): Promise<string[]>;

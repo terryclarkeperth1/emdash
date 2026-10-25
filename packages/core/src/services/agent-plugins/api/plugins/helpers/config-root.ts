@@ -30,6 +30,11 @@ export function envConfigRoot(envVar: string, fallbackDirectory: string): Config
       : pathApi(platform).join(homeDir, fallbackDirectory);
 }
 
+/** Resolve a file inside a single configuration root. */
+export function configFile(resolver: ConfigRootResolver, file: string): ConfigRootResolver {
+  return (context) => pathApi(context.platform).join(resolver(context), file);
+}
+
 /** Combine multiple single-root resolvers into a multi-root resolver returning all roots. */
 export function configRoots(
   ...resolvers: ConfigRootResolver[]

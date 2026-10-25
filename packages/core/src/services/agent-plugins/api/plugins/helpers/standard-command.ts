@@ -74,6 +74,10 @@ export function buildStandardCommand(ctx: CommandContext, spec: StandardCommandS
     args.push(...spec.defaultArgs);
   }
 
+  if (ctx.hookArgs?.length) {
+    args.push(...ctx.hookArgs);
+  }
+
   // Session / resume logic.
   // For sessionIdOnResumeOnly providers, use only the provider-native session id.
   // If providerSessionId is absent, validSessionId will be undefined → fallback flags apply.

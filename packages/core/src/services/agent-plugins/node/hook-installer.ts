@@ -18,6 +18,7 @@ export type AgentHookInstallerOptions = {
 type ResolvedHookInstallation = {
   providerId: string;
   roots: string[];
+  launchArgs: string[];
   isInstalled(): Promise<boolean>;
   install(): Promise<void>;
 };
@@ -82,6 +83,15 @@ export class AgentHookInstaller {
     }
   }
 
+  /** CLI args the agent needs to load the hooks this installer wrote. */
+  async hookLaunchArgs(params: {
+    providerId: string;
+    env?: Record<string, string>;
+  }): Promise<string[]> {
+    const installation = await this.resolveInstallation(params);
+    return installation?.launchArgs ?? [];
+  }
+
   private async resolveInstallation(params: {
     providerId: string;
     workspacePath?: string;
@@ -114,6 +124,7 @@ export class AgentHookInstaller {
       return {
         providerId: params.providerId,
         roots,
+        launchArgs: behavior.launchArgs?.(configContext) ?? [],
         isInstalled: async () =>
           everyAsync(roots, (root) => behavior.getHooksInstalled(createLocalPluginFs(root))),
         install: async () => {
@@ -140,6 +151,7 @@ export class AgentHookInstaller {
       return {
         providerId: params.providerId,
         roots: [root],
+        launchArgs: [],
         isInstalled: () => behavior.isPluginInstalled(fs, scope),
         install: async () => {
           await behavior.installPlugin(fs, scope);

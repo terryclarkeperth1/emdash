@@ -91,6 +91,34 @@ describe('claude hooks', () => {
     expect(command.args).toEqual(['--resume', RESUMED_SESSION_ID]);
   });
 
+  it('writes hooks to an Emdash-owned settings file loaded with --settings', () => {
+    const hooks = provider.behavior.hooks!;
+    const context = { env: {}, homeDir: '/home/user', platform: 'linux' as const };
+
+    expect(hooks.resolveConfigRoots(context)).toEqual(['/home/user/.emdash/agent-hooks/claude']);
+    expect(hooks.launchArgs!(context)).toEqual([
+      '--settings',
+      '/home/user/.emdash/agent-hooks/claude/settings.json',
+    ]);
+  });
+
+  it('places hook args before the session flags', () => {
+    const command = provider.behavior.prompt!.buildCommand({
+      cli: 'claude',
+      hookArgs: ['--settings', '/hooks/settings.json'],
+      autoApprove: false,
+      sessionId: 'conversation-1',
+      model: '',
+    });
+
+    expect(command.args).toEqual([
+      '--settings',
+      '/hooks/settings.json',
+      '--session-id',
+      'conversation-1',
+    ]);
+  });
+
   it('declares session as a supported hook event', () => {
     expect(provider.capabilities.hooks).toEqual({
       kind: 'config',

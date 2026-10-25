@@ -503,8 +503,19 @@ export class TuiAgentsRuntime {
       startedAt,
     });
 
+    const {
+      env: hookEnv,
+      args: hookArgs,
+      startHooksActive,
+    } = await this.prepareHookEnv(config.input, provider);
+    session.startHooksActive = startHooksActive;
+    if (!this.isCurrentGeneration(config.input.conversationId, generation)) {
+      return this.cancelledSpawn(config.input.conversationId);
+    }
+
     const commandResult = await this.deps.agentHost.buildPromptCommand(config.input.providerId, {
       extraArgs: config.input.extraArgs,
+      hookArgs,
       autoApprove: config.input.autoApprove ?? false,
       initialPrompt: isResuming ? undefined : config.input.initialPrompt,
       sessionId: config.input.conversationId,
@@ -526,11 +537,6 @@ export class TuiAgentsRuntime {
         providerId: config.input.providerId,
         workspacePath: config.input.cwd,
       });
-    }
-    const { env: hookEnv, startHooksActive } = await this.prepareHookEnv(config.input, provider);
-    session.startHooksActive = startHooksActive;
-    if (!this.isCurrentGeneration(config.input.conversationId, generation)) {
-      return this.cancelledSpawn(config.input.conversationId);
     }
 
     // Git-credential behavior is applied last through the blessed construction (spec:
@@ -815,10 +821,10 @@ export class TuiAgentsRuntime {
   private async prepareHookEnv(
     input: TuiAgentStartInput,
     provider: ResolvedTuiProvider
-  ): Promise<{ env: Record<string, string>; startHooksActive: boolean }> {
+  ): Promise<{ env: Record<string, string>; args: string[]; startHooksActive: boolean }> {
     const declaresStart =
       provider.hooks.kind !== 'none' && provider.hooks.supportedEvents.includes('start');
-    if (provider.hooks.kind === 'none') return { env: {}, startHooksActive: false };
+    if (provider.hooks.kind === 'none') return { env: {}, args: [], startHooksActive: false };
 
     const hooksAvailable = await this.hookInstaller.ensureHooksInstalled({
       providerId: input.providerId,
@@ -834,6 +840,13 @@ export class TuiAgentsRuntime {
         }
       );
     }
+    // Launch args point the agent at the hook file, so only pass them once it exists.
+    const args = hooksAvailable
+      ? await this.hookInstaller.hookLaunchArgs({
+          providerId: input.providerId,
+          env: input.providerVars,
+        })
+      : [];
 
     let hook;
     try {
@@ -844,10 +857,11 @@ export class TuiAgentsRuntime {
         providerId: input.providerId,
         error: String(error),
       });
-      return { env: {}, startHooksActive: false };
+      return { env: {}, args, startHooksActive: false };
     }
 
     return {
+      args,
       env: {
         EMDASH_HOOK_PORT: String(hook.port),
         EMDASH_PTY_ID: input.conversationId,
