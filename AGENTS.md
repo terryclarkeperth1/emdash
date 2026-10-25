@@ -15,7 +15,6 @@ such as `src/...`, `drizzle/`, `scripts/`, and `build/` are relative to
 
 Repo root:
 
-- `.claude/` - Local Claude agent settings for this checkout.
 - `.github/` - GitHub issue templates, reusable actions, CI, and release workflows.
 - `agents/` - Agent-facing architecture, workflow, convention, integration, and risk docs.
 - `apps/emdash-desktop/` - The Electron desktop app.
