@@ -410,7 +410,7 @@
     "@emdash/shared": "workspace:*",
     "@emdash/wire": "workspace:*",
     "@parcel/watcher": "^2.5.6",
-    "better-sqlite3": "^12.10.0",
+    "better-sqlite3": "^12.11.1",
     "croner": "^10.0.1",
     "drizzle-orm": "^0.45.2",
     "minimatch": "^10.2.5",
@@ -432,7 +432,7 @@
     "node-pty": "1.1.0",
     "tsdown": "^0.22.2",
     "tsx": "^4.22.4",
-    "vitest": "^4.1.0",
+    "vitest": "^4.1.12",
     "vscode-langservers-extracted": "4.10.0",
     "yaml-language-server": "1.24.0"
   },

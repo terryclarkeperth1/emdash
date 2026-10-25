@@ -57,24 +57,24 @@
     "vfile": "^6.0.3"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "^10.4.5",
+    "@storybook/addon-docs": "^10.6.3",
     "@types/mdast": "^4.0.4",
     "@types/node": "^20.10.0",
     "@types/react": "^19.0.0",
-    "@vitest/browser": "^4.1.8",
-    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/browser": "^4.1.12",
+    "@vitest/browser-playwright": "^4.1.12",
     "devicon": "^2.17.0",
     "oxfmt": "^0.51.0",
     "oxlint": "^1.69.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "storybook": "^10.4.5",
-    "storybook-solidjs-vite": "10.4.0",
+    "storybook": "^10.6.3",
+    "storybook-solidjs-vite": "10.7.4",
     "typescript": "^6.0.2",
     "vite": "7.3.7",
     "vite-plugin-dts": "5.0.2",
     "vite-plugin-solid": "2.11.12",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.12"
   },
   "peerDependencies": {
     "react": "^19.0.0",
