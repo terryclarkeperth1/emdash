@@ -1,8 +1,11 @@
 # REMEMBER — Emdash
 
+## Repo
+- Terry's own project: stays on this PC. Never push to or sync with the GitHub fork or upstream.
+
 ## Data
 - App data (SQLite DBs, settings): `%APPDATA%\emdash-dev`. Launched from inside the Claude desktop app it lands in Claude's sandbox copy instead: `%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\emdash-dev`.
-- Worktrees: `%USERPROFILE%\.emdash\worktrees`.
+- Worktrees: `%USERPROFILE%\emdash\worktrees`.
 - Electron binary: `node_modules\electron\dist\electron.exe` (unsigned upstream; fetched by `node node_modules/electron/install.js`).
 
 ## Network

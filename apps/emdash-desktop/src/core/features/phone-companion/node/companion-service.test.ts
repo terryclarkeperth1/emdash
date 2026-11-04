@@ -94,6 +94,25 @@ describe('CompanionService', () => {
     });
   });
 
+  it('skips the idle notice that follows a finished turn', async () => {
+    const { service, emit } = make();
+    const on = await service.setEnabled(true);
+    const base = on.url!.split('/?')[0]!;
+    const token = on.url!.split('t=')[1]!;
+    emit(event('stop'));
+    emit(event('notification', { notificationType: 'idle_prompt', message: 'Waiting' }));
+    emit(event('notification', { notificationType: 'permission_prompt', message: 'Allow?' }));
+    emit(event('notification', { notificationType: 'idle_prompt', message: 'Waiting' }));
+    await vi.waitFor(async () => {
+      const state = await (await fetch(`${base}/api/state?since=0&t=${token}`)).json();
+      expect(state.alerts.map((a: { kind: string }) => a.kind)).toEqual([
+        'done',
+        'needs-input',
+        'needs-input',
+      ]);
+    });
+  });
+
   it('reports a clear error when Tailscale is absent and loopback fallback is off', async () => {
     const { service } = make(false);
     const state = await service.setEnabled(true);

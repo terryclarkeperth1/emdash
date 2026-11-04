@@ -15,6 +15,8 @@ export function alertKind(event: AgentEvent): CompanionAlertKind | null {
 export class AlertFeed {
   private nextId = 1;
   private items: CompanionAlert[] = [];
+  /** Last alert kind per conversation; Claude's idle notice after a finished turn repeats it. */
+  private readonly lastKind = new Map<string, CompanionAlertKind>();
 
   constructor(
     private readonly capacity = 100,
@@ -24,6 +26,10 @@ export class AlertFeed {
   push(event: AgentEvent, title: string): CompanionAlert | null {
     const kind = alertKind(event);
     if (!kind) return null;
+    const idle =
+      event.type === 'notification' && event.payload.notificationType === 'idle_prompt';
+    if (idle && this.lastKind.get(event.conversationId) === 'done') return null;
+    this.lastKind.set(event.conversationId, kind);
     const text =
       kind === 'done'
         ? 'Finished'
