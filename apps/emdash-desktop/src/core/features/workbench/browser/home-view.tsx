@@ -4,11 +4,11 @@ import { motion } from 'motion/react';
 import { Fragment } from 'react';
 import { homeViewDef } from '@core/features/workbench/contributions/views';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
+import HubIcon from '@/assets/images/emdash/emdash.png';
 import { EmdashShimmerLogo } from '@core/primitives/app-identity/browser/emdash-shimmer-logo';
 import { Shortcut } from '@core/primitives/keybindings/browser/shortcut';
 import { useArrowKeyNavigation } from '@core/primitives/react-hooks/browser/use-arrow-key-navigation';
 import { cn } from '@core/primitives/styling/browser/cn';
-import { useTheme } from '@core/primitives/theme/browser';
 import { defineViewRuntime } from '@core/primitives/views/react';
 
 const PROJECT_ACTIONS = [
@@ -46,8 +46,6 @@ export function HomeMainPanel() {
       void openAddProjectModal(PROJECT_ACTIONS[index].modalArgs);
     }
   );
-  const { effectiveTheme } = useTheme();
-  const isDark = effectiveTheme === 'emdark';
 
   return (
     <motion.div
@@ -58,11 +56,12 @@ export function HomeMainPanel() {
     >
       <div className="container mx-auto flex min-h-full max-w-6xl flex-1 flex-col justify-center px-8 py-8">
         <div className="mb-3 text-center">
-          <div className="mb-3 flex items-center justify-center">
+          <div className="mb-3 flex flex-col items-center justify-center gap-4">
+            <img src={HubIcon} alt="" className="h-20 w-20" />
             <EmdashShimmerLogo
               height={32}
-              color={isDark ? 'var(--color-background-2)' : 'var(--color-foreground)'}
-              shimmerColor={isDark ? 'white' : 'var(--color-foreground-passive)'}
+              color="var(--color-foreground)"
+              shimmerColor="#a78bff"
             />
           </div>
         </div>

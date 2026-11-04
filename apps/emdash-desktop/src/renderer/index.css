@@ -1092,31 +1092,35 @@
   }
 }
 
-/* HUB theme: dark mode tinted to the HUB icon (deep navy-violet, violet accents, teal highlights).
+/* HUB theme: dark mode in the style of GeForce Experience: neutral charcoal surfaces, pure white
+   text, light grey secondary text and one vivid HUB violet accent with teal highlights.
    Unlayered so it beats the layered palette above and the generated @emdash/theme tokens. */
 .emdark {
-  --em-surface-paper: #110e22;
-  --background: #0f0d1f;
-  --background-1: #15122a;
-  --background-2: #1b1734;
-  --background-3: #221d40;
-  --background-secondary-3: #2a2450;
-  --background-tertiary-2: #262049;
-  --background-tertiary-3: #2a2450;
-  --foreground-muted: #b9b3d6;
-  --foreground-passive: #7d76a3;
-  --border: #2e2752;
-  --border-1: #3a3266;
-  --border-2: #4a4080;
-  --border-primary: #6a52c9;
-  --primary-button-background: #3b2a7a;
-  --primary-button-background-hover: #4a3696;
-  --primary-button-foreground: #ece6ff;
-  --primary-button-border: #6a52c9;
-  --selection: #2b2470;
-  --selection-foreground: #d8f7ff;
-  --chat-code-inline-bg: rgba(140, 120, 255, 0.12);
-  --xterm-selection-bg: rgba(64, 214, 224, 0.35);
-  --monaco-selection-bg: rgba(106, 82, 201, 0.6);
-  --monaco-inactive-selection-bg: rgba(106, 82, 201, 0.3);
+  --em-surface-paper: #1c1c1e;
+  --background: #1c1c1e;
+  --background-1: #161618;
+  --background-2: #26262a;
+  --background-3: #2e2e33;
+  --background-secondary-3: #36363c;
+  --background-tertiary-2: #323237;
+  --background-tertiary-3: #36363c;
+  --foreground: #ffffff;
+  --foreground-muted: #d4d4d8;
+  --foreground-passive: #a1a1aa;
+  --neutral-11: #d4d4d8;
+  --neutral-12: #ffffff;
+  --border: #3a3a40;
+  --border-1: #48484f;
+  --border-2: #5a5a62;
+  --border-primary: #8b6cff;
+  --primary-button-background: #7c5cff;
+  --primary-button-background-hover: #9277ff;
+  --primary-button-foreground: #ffffff;
+  --primary-button-border: #9277ff;
+  --selection: #3b2f80;
+  --selection-foreground: #ffffff;
+  --chat-code-inline-bg: rgba(255, 255, 255, 0.1);
+  --xterm-selection-bg: rgba(52, 224, 208, 0.35);
+  --monaco-selection-bg: rgba(124, 92, 255, 0.55);
+  --monaco-inactive-selection-bg: rgba(124, 92, 255, 0.28);
 }
