@@ -4,14 +4,17 @@
 import { execFileSync, spawnSync } from 'node:child_process';
 
 const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-const base = execFileSync('git', ['rev-parse', '@{u}'], { encoding: 'utf8' }).trim();
+// The push check passes the pushed base; without it (first push) every package runs.
+const base = process.env.TESTKIT_BASE;
 const script = [
   'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin NX_DAEMON=false',
   'cd ~/emdash',
-  `git fetch -q /mnt/c/Emdash ${base} ${sha}`,
+  `git fetch -q /mnt/c/Emdash ${base ?? ''} ${sha}`,
   `git reset -q --hard ${sha}`,
   'pnpm install --frozen-lockfile --silent',
-  `pnpm exec nx affected -t test --base=${base} --head=${sha} --output-style=static`,
+  base
+    ? `pnpm exec nx affected -t test --base=${base} --head=${sha} --output-style=static`
+    : 'pnpm exec nx run-many -t test --all --output-style=static',
 ].join(' && ');
 
 const run = spawnSync('wsl', ['-d', 'Ubuntu-24.04', '--cd', '~', '--', 'bash', '-lc', script], {
