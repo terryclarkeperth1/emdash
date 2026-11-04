@@ -2,6 +2,7 @@ import { Clock, FolderInput, MessageSquareShare, Settings } from 'lucide-react';
 import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { automationsViewDef } from '@core/features/automations/contributions/views';
+import { UsageStrip } from '@core/features/usage/browser/usage-strip';
 import { settingsViewDef } from '@core/features/settings/contributions/views';
 import { useOpenModal } from '@core/manifests/browser/modal-api';
 import { BoundShortcut } from '@core/primitives/keybindings/browser/shortcut';
@@ -96,6 +97,7 @@ export const LeftSidebar: React.FC = observer(function LeftSidebar() {
             </SidebarMenuButton>
           </SidebarMenu>
         </SidebarFooter>
+        <UsageStrip />
         <div
           className="flex shrink-0 items-center justify-between gap-2 border-t border-border px-3"
           style={{ height: WORKBENCH_BOTTOM_BAR_HEIGHT_PX }}

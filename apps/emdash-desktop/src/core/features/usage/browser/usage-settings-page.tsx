@@ -1,20 +1,12 @@
-import { remote, type RemoteModel } from '@emdash/wire/state';
 import { useState } from 'react';
 import { useRemoteModelState } from '@core/primitives/wire/browser/use-remote-model-state';
 import { getUsageClient } from '../api/browser/client';
 import { usageContract } from '../api/contract';
+import { getUsageModel } from './usage-model';
 import { UsageOverviewView } from './usage-overview-view';
 
-let modelPromise: Promise<RemoteModel<typeof usageContract.overview>> | undefined;
-function getModel() {
-  modelPromise ??= getUsageClient().then((client) =>
-    remote(usageContract.overview, client.overview, { lingerMs: 15_000 })
-  );
-  return modelPromise;
-}
-
 export function UsageSettingsPage() {
-  const state = useRemoteModelState(usageContract.overview, getModel, undefined, 'current');
+  const state = useRemoteModelState(usageContract.overview, getUsageModel, undefined, 'current');
   const [refreshing, setRefreshing] = useState(false);
   const [refreshError, setRefreshError] = useState<string>();
   const refresh = async () => {
