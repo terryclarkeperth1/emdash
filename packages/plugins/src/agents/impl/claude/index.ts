@@ -12,7 +12,7 @@ import { resolveAdapterAsset } from '../../helpers/adapter-assets';
 import { enrichClaudeUpdate } from './acp-transform';
 import { claudeAdapter } from './adapter';
 import { claudeAuthStatus } from './auth';
-import { buildClaudeHookConfig } from './hooks';
+import { buildClaudeHookConfig, CLAUDE_LEAN_ENV } from './hooks';
 import { icon } from './icon';
 import { probeClaudeUsage } from './usage';
 
@@ -149,6 +149,7 @@ export const provider = registerPluginBehavior(plugin, {
         // Point the adapter's Claude Agent SDK at the host-installed claude
         // binary instead of the SDK's auto-downloaded native binary.
         CLAUDE_CODE_EXECUTABLE: ctx.cli,
+        ...CLAUDE_LEAN_ENV,
       },
     }),
     connect: (io, toClient) => {
@@ -160,14 +161,16 @@ export const provider = registerPluginBehavior(plugin, {
     checkStatus: claudeAuthStatus,
   },
   prompt: {
-    buildCommand: (ctx) =>
-      buildStandardCommand(ctx, {
+    buildCommand: (ctx) => {
+      const command = buildStandardCommand(ctx, {
         autoApproveFlag: '--dangerously-skip-permissions',
         initialPromptFlag: '',
         resumeFlag: '--resume',
         sessionIdFlag: '--session-id',
         modelFlag: '--model',
-      }),
+      });
+      return { ...command, env: { ...command.env, ...CLAUDE_LEAN_ENV } };
+    },
   },
   hooks: buildClaudeHookConfig(),
   mcp: passthroughMcpAdapter('.claude.json'),

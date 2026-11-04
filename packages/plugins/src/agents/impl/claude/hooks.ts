@@ -22,6 +22,9 @@ const claudeHooksRoot = homeConfigRoot('.emdash/agent-hooks/claude');
 export const CLAUDE_DISALLOWED_TOOLS =
   'RemoteTrigger,SendMessage,ListAgents,TaskStop,Monitor,PowerShell';
 
+/** Leaves out the claude.ai connectors (Gmail, Drive, Docs), about 2.4k prompt tokens a session. */
+export const CLAUDE_LEAN_ENV = { ENABLE_CLAUDEAI_MCP_SERVERS: 'false' };
+
 /**
  * Claude's Notification events carry no `notification_type` field.
  * Classify by examining the message text:
