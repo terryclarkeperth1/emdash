@@ -148,7 +148,9 @@ describe('atomic, identity-bound machine credentials', () => {
       expect(
         (await resolveSshConnectConfig({ kind: 'persisted', row }, connectDeps())).config.passphrase
       ).toBe('legacy-passphrase');
-    }
+    },
+    // RSA key generation alone can pass 5 s on a loaded runner.
+    30_000
   );
 
   it('preserves the old row and secrets when another writer claims the name after the pre-check', async () => {

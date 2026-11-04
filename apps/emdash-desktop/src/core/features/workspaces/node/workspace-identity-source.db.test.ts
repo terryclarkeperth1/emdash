@@ -94,5 +94,6 @@ describe('workspace identity database source', () => {
 
     expect(await resolveTarget()).toMatchObject({ workspaceId: 'target' });
     expect(prepare).toHaveBeenCalledTimes(baselineQueries);
-  });
+    // 499 row inserts can pass 5 s on a loaded runner.
+  }, 30_000);
 });
