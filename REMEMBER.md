@@ -1,7 +1,7 @@
 # REMEMBER — Emdash
 
 ## Repo
-- Terry's own project: stays on this PC. Never push to or sync with the GitHub fork or upstream.
+- Terry's own project: pushes go to his GitHub fork (`origin`) only; never to upstream.
 
 ## Data
 - App data (SQLite DBs, settings): `%APPDATA%\emdash-dev`. Launched from inside the Claude desktop app it lands in Claude's sandbox copy instead: `%LOCALAPPDATA%\Packages\Claude_pzs8sxrjxfjjc\LocalCache\Roaming\emdash-dev`.
