@@ -1,0 +1,11 @@
+{
+  "schema_id": "testkit-project.v2",
+  "schema_version": 2,
+  "native_tests": [],
+  "stored_code": [
+    "apps/emdash-desktop/src/core/features/projects/browser/components/add-project-modal/untrusted-repository-notice.browser.test.tsx",
+    "apps/emdash-desktop/src/core/features/workspaces/contributions/browser/workspace-detail-page.browser.test.tsx",
+    "apps/emdash-desktop/src/core/primitives/view-scopes/react/use-view-scope.browser.test.tsx",
+    "apps/emdash-desktop/src/core/services/ssh/node/connect/ssh-agent-windows-helpers.test.ts"
+  ]
+}
