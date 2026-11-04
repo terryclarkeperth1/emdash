@@ -1105,12 +1105,12 @@
   --background-tertiary-2: #323237;
   --background-tertiary-3: #36363c;
   --foreground: #ffffff;
-  --foreground-muted: #d4d4d8;
-  --foreground-passive: #a1a1aa;
-  --neutral-11: #d4d4d8;
+  --foreground-muted: #ededf0;
+  --foreground-passive: #c4c4cc;
+  --neutral-11: #ededf0;
   --neutral-12: #ffffff;
-  --border: #3a3a40;
-  --border-1: #48484f;
+  --border: #45454c;
+  --border-1: #55555d;
   --border-2: #5a5a62;
   --border-primary: #8b6cff;
   --primary-button-background: #7c5cff;
@@ -1123,4 +1123,8 @@
   --xterm-selection-bg: rgba(52, 224, 208, 0.35);
   --monaco-selection-bg: rgba(124, 92, 255, 0.55);
   --monaco-inactive-selection-bg: rgba(124, 92, 255, 0.28);
+}
+.emdark body {
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'cv11', 'ss01';
 }
