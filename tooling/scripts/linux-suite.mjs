@@ -1,16 +1,17 @@
-// Runs every package's tests on Linux (WSL Ubuntu-24.04, upstream's CI platform) for the commit
+// Runs the tests of every package this commit changes against its upstream on Linux (WSL Ubuntu-24.04, upstream's CI platform) for the commit
 // checked out here, then prints one testkit-native-result.v1 JSON line for the push check.
 // Windows has ~331 upstream failures (POSIX paths, shells), so the push check runs the suite here instead.
 import { execFileSync, spawnSync } from 'node:child_process';
 
 const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const base = execFileSync('git', ['rev-parse', '@{u}'], { encoding: 'utf8' }).trim();
 const script = [
   'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin NX_DAEMON=false',
   'cd ~/emdash',
-  `git fetch -q /mnt/c/Emdash ${sha}`,
-  'git reset -q --hard FETCH_HEAD',
+  `git fetch -q /mnt/c/Emdash ${base} ${sha}`,
+  `git reset -q --hard ${sha}`,
   'pnpm install --frozen-lockfile --silent',
-  'pnpm exec nx run-many -t test --all --output-style=static',
+  `pnpm exec nx affected -t test --base=${base} --head=${sha} --output-style=static`,
 ].join(' && ');
 
 const run = spawnSync('wsl', ['-d', 'Ubuntu-24.04', '--cd', '~', '--', 'bash', '-lc', script], {
