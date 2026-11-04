@@ -109,7 +109,7 @@ describe('boot guard', () => {
     const previous = observePreviousBoot(productionConfig);
     expect(previous.failures).toBe(2);
     expect(describeCrashLoop(previous)).toBe(
-      'Emdash entered recovery mode after 2 consecutive failed launches.\n\n' +
+      'HUB entered recovery mode after 2 consecutive failed launches.\n\n' +
         'Most recent failure:\nbetter-sqlite3 failed to load'
     );
   });
@@ -137,7 +137,7 @@ describe('boot guard', () => {
     const previous = observePreviousBoot(productionConfig);
     expect(previous).toEqual({ booting: false, failures: 2 });
     expect(describeCrashLoop(previous)).toBe(
-      'Emdash entered recovery mode after 2 consecutive failed launches'
+      'HUB entered recovery mode after 2 consecutive failed launches'
     );
   });
 

@@ -61,7 +61,7 @@ describe('RenameProjectModal', () => {
     await act(async () => {
       root.render(
         <Dialog.Root open>
-          <RenameProjectModal projectId="project-1" currentName="Emdash" />
+          <RenameProjectModal projectId="project-1" currentName="HUB" />
         </Dialog.Root>
       );
     });
@@ -74,11 +74,11 @@ describe('RenameProjectModal', () => {
     mocks.renameProject.mockResolvedValue(undefined);
     const input = await renderModal();
 
-    await act(async () => setInputValue(input, '  Emdash Desktop  '));
+    await act(async () => setInputValue(input, '  HUB Desktop  '));
     await act(async () => pressEnter(input));
 
     expect(mocks.renameProject).toHaveBeenCalledTimes(1);
-    expect(mocks.renameProject).toHaveBeenCalledWith('project-1', 'Emdash Desktop');
+    expect(mocks.renameProject).toHaveBeenCalledWith('project-1', 'HUB Desktop');
     expect(mocks.complete).toHaveBeenCalledTimes(1);
   });
 
@@ -92,7 +92,7 @@ describe('RenameProjectModal', () => {
     );
     const input = await renderModal();
 
-    await act(async () => setInputValue(input, 'Emdash Desktop'));
+    await act(async () => setInputValue(input, 'HUB Desktop'));
     await act(async () => pressEnter(input));
     await act(async () => pressEnter(input));
     await act(async () => pressEnter(input));
@@ -120,7 +120,7 @@ describe('RenameProjectModal', () => {
     mocks.renameProject.mockResolvedValueOnce(undefined);
     const input = await renderModal();
 
-    await act(async () => setInputValue(input, 'Emdash Desktop'));
+    await act(async () => setInputValue(input, 'HUB Desktop'));
     await act(async () => pressEnter(input));
     expect(host.textContent).toContain('Project missing not found');
     expect(mocks.complete).not.toHaveBeenCalled();

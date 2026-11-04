@@ -95,7 +95,7 @@ export type AccountProviderTokenPersistenceError = {
   cause?: SerializedError;
 };
 
-export const SESSION_EXPIRED_MESSAGE = 'Your Emdash session expired. Sign in again.';
+export const SESSION_EXPIRED_MESSAGE = 'Your HUB session expired. Sign in again.';
 
 export function unknownErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;

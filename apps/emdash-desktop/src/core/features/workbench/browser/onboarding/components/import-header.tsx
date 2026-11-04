@@ -16,20 +16,20 @@ export type ImportHeaderProps = {
 };
 
 function singleSourceTitle(source: LegacyImportSource): string {
-  return `Import your Emdash ${sourceLabel(source)} data`;
+  return `Import your HUB ${sourceLabel(source)} data`;
 }
 
 function singleSourceDescription(preview: LegacyPortPreviewSource): string {
   return `Found ${formatCount(preview.projects, 'project')} and ${formatCount(
     preview.tasks,
     'task'
-  )} from your previous Emdash installation`;
+  )} from your previous HUB installation`;
 }
 
 export function ImportHeader({ isLoading, singleSource = null }: ImportHeaderProps) {
   const title = singleSource
     ? singleSourceTitle(singleSource.source)
-    : 'Do you want to import projects and tasks from other Emdash versions?';
+    : 'Do you want to import projects and tasks from other HUB versions?';
   const description = singleSource
     ? singleSourceDescription(singleSource.preview)
     : 'Select one or more sources.';
@@ -42,7 +42,7 @@ export function ImportHeader({ isLoading, singleSource = null }: ImportHeaderPro
           <h1 className="text-center text-xl">{title}</h1>
           {isLoading ? (
             <p className="text-md text-center text-foreground-muted">
-              Scanning existing Emdash data...
+              Scanning existing HUB data...
             </p>
           ) : (
             <p className="text-md text-center text-foreground-muted">{description}</p>

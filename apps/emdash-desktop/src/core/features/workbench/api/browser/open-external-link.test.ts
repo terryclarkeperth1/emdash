@@ -108,7 +108,7 @@ describe('confirmOpenExternalLink', () => {
     });
   });
 
-  it('opens the link in the active Emdash task after that choice completes', async () => {
+  it('opens the link in the active HUB task after that choice completes', async () => {
     const taskView = {
       paneLayout: { open: vi.fn() },
       setFocusedRegion: vi.fn(),

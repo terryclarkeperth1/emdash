@@ -149,7 +149,7 @@ describe('GitLab device sign-in', () => {
     await act(async () => button('Use device flow').click());
   }
 
-  it('offers Emdash sign-in, device sign-in, and the token form', async () => {
+  it('offers HUB sign-in, device sign-in, and the token form', async () => {
     await render('integrationSetupModal', <IntegrationSetupModal integration="gitlab" />);
     expect(button('Continue')).toBeTruthy();
     expect(button('Use device flow')).toBeTruthy();
@@ -158,9 +158,9 @@ describe('GitLab device sign-in', () => {
     expect(document.querySelector('input[type="password"]')).not.toBeNull();
   });
 
-  it('signs in to Emdash with GitHub, then links GitLab, when signed out', async () => {
+  it('signs in to HUB with GitHub, then links GitLab, when signed out', async () => {
     await render('integrationSetupModal', <IntegrationSetupModal integration="gitlab" />);
-    expect(document.body.textContent).toContain('Link GitLab to Emdash');
+    expect(document.body.textContent).toContain('Link GitLab to HUB');
     await act(async () => button('Continue').click());
     expect(accountHooks.signIn).toHaveBeenCalledExactlyOnceWith({ provider: 'github' });
     expect(accountHooks.linkProvider).toHaveBeenCalledExactlyOnceWith({ provider: 'gitlab' });
@@ -179,7 +179,7 @@ describe('GitLab device sign-in', () => {
     expect(controller.complete).not.toHaveBeenCalled();
   });
 
-  it('links GitLab to a signed-in Emdash account instead of offering device sign-in', async () => {
+  it('links GitLab to a signed-in HUB account instead of offering device sign-in', async () => {
     accountHooks.session = { isSignedIn: true, hasAccount: true };
     await render('integrationSetupModal', <IntegrationSetupModal integration="gitlab" />);
     expect(document.querySelector('button[aria-label="Use device flow"]')).toBeNull();
@@ -267,7 +267,7 @@ describe('GitLab device sign-in', () => {
     });
   });
 
-  it('reconnects the selected account through Emdash sign-in', async () => {
+  it('reconnects the selected account through HUB sign-in', async () => {
     await render(
       'integrationSetupModal',
       <IntegrationSetupModal integration="gitlab" accountId="https://gitlab.com:42" />

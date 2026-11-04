@@ -7,7 +7,7 @@ const panelState = vi.hoisted(() => ({
   kind: 'ready',
   store: {
     id: 'project-1',
-    name: 'Emdash',
+    name: 'HUB',
     context: undefined as
       | undefined
       | {
@@ -24,7 +24,7 @@ const panelState = vi.hoisted(() => ({
 vi.mock('@core/features/projects/api/browser/stores/project-selectors', () => ({
   getProjectManagerStore: () => ({ hydrateProjectContext: vi.fn() }),
   getProjectStore: () => panelState.store,
-  projectDisplayName: () => 'Emdash',
+  projectDisplayName: () => 'HUB',
   projectViewKind: () => panelState.kind,
 }));
 
@@ -42,7 +42,7 @@ vi.mock('@core/primitives/navigation/browser/navigation-hooks', () => ({
 }));
 
 vi.mock('./project-header', () => ({
-  ProjectHeader: () => <header data-layout-part="header">Emdash</header>,
+  ProjectHeader: () => <header data-layout-part="header">HUB</header>,
 }));
 
 vi.mock('@core/features/projects/contributions/browser/project-availability-boundary', () => ({
@@ -197,7 +197,7 @@ describe('ProjectMainPanel layout', () => {
 
     await act(async () => root.render(<ProjectMainPanel />));
 
-    expect(host.querySelector('[data-layout-part="header"]')?.textContent).toBe('Emdash');
+    expect(host.querySelector('[data-layout-part="header"]')?.textContent).toBe('HUB');
     expect(host.textContent).toContain(message);
     expect(host.querySelector('[data-project-page-scroll]')).not.toBeNull();
   });

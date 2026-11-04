@@ -26,7 +26,7 @@ export function EmdashShimmerLogo({
     <svg
       width={width}
       height={height}
-      viewBox="0 0 499 70"
+      viewBox="0 0 176 70"
       fill={`url(#${gradientId})`}
       className={className}
       xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ export function EmdashShimmerLogo({
         <linearGradient
           id={gradientId}
           gradientUnits="userSpaceOnUse"
-          x1="-499"
+          x1="-176"
           y1="-144"
           x2="0"
           y2="144"
@@ -49,7 +49,7 @@ export function EmdashShimmerLogo({
             <animateTransform
               attributeName="gradientTransform"
               type="translate"
-              values="0 0; 998 0; 998 0"
+              values="0 0; 352 0; 352 0"
               keyTimes="0; 0.9; 1"
               dur="7s"
               repeatCount="indefinite"

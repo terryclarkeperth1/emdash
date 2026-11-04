@@ -4,7 +4,7 @@ export const COMPANION_PAGE = `<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111214">
 <meta name="referrer" content="no-referrer">
-<title>Emdash</title>
+<title>HUB</title>
 <style>
 :root{color-scheme:dark;--bg:#0e0f12;--card:#17191d;--line:#262930;--fg:#eceef2;--dim:#8d929c;
 --blue:#4c8dff;--amber:#f5a524;--green:#3fb950;--red:#f85149}
@@ -42,7 +42,7 @@ button:disabled{opacity:.5}
 #alerts .card .s{white-space:normal}
 .empty{text-align:center;color:var(--dim);padding:48px 12px}
 </style></head><body>
-<header><h1>Emdash</h1><span id="conn">connecting</span></header>
+<header><h1>HUB</h1><span id="conn">connecting</span></header>
 <div id="alerts"></div><div id="list"></div>
 <script>
 (function(){
@@ -62,7 +62,7 @@ button:disabled{opacity:.5}
     if(window.Notification&&Notification.permission==='granted'){try{new Notification(a.title,{body:a.text})}catch(e){}}
     var c=el('div','card '+(a.kind==='done'?'done':a.kind==='error'?'err':''));
     c.appendChild(el('div','t',a.title));c.appendChild(el('div','s',a.text));
-    c.onclick=function(){c.remove()};alerts.prepend(c);document.title=(a.kind==='needs-input'?'(!) ':'')+'Emdash';
+    c.onclick=function(){c.remove()};alerts.prepend(c);document.title=(a.kind==='needs-input'?'(!) ':'')+'HUB';
   }
   function render(sessions){
     list.textContent='';
@@ -91,7 +91,7 @@ button:disabled{opacity:.5}
   document.addEventListener('focusin',function(e){typing=e.target.tagName==='INPUT'});
   document.addEventListener('focusout',function(){typing=false});
   function poll(){
-    if(!token){conn.textContent='scan the QR code in Emdash settings';return}
+    if(!token){conn.textContent='scan the QR code in HUB settings';return}
     api('/api/state?since='+last).then(function(s){
       conn.textContent='live';conn.className='live';
       if(seeded)s.alerts.forEach(notify);

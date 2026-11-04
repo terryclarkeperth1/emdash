@@ -145,14 +145,14 @@ describe('UntrustedRepositoryNotice', () => {
     const trust = vi
       .fn()
       .mockResolvedValueOnce(
-        err({ message: 'The Emdash workspace server on this machine is too old.' })
+        err({ message: 'The HUB workspace server on this machine is too old.' })
       )
       .mockResolvedValueOnce(ok({ added: true }));
     const { onTrusted } = render({ trust, hostLabel: 'build-box' });
 
     await clickButton('Trust repository...');
     await expect
-      .element(page.getByText('The Emdash workspace server on this machine is too old.'))
+      .element(page.getByText('The HUB workspace server on this machine is too old.'))
       .toBeVisible();
     expect(onTrusted).not.toHaveBeenCalled();
 

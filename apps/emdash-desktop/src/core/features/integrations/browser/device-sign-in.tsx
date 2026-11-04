@@ -201,7 +201,7 @@ export function DeviceSignIn({
         ) : (
           <>
             <p className="text-sm text-foreground-muted">
-              Authorize Emdash in {providerName} with this one-time code.
+              Authorize HUB in {providerName} with this one-time code.
             </p>
             <button
               type="button"
@@ -225,7 +225,7 @@ export function DeviceSignIn({
               <Step number={1}>
                 Check that {providerName} shows this code. If it asks, enter the code.
               </Step>
-              <Step number={2}>Authorize Emdash.</Step>
+              <Step number={2}>Authorize HUB.</Step>
             </ol>
             {openingIn !== null && openingIn > 0 ? (
               <div className="rounded-lg border border-border-info bg-background-info p-3 text-sm text-foreground-info">

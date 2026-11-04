@@ -52,7 +52,7 @@ describe('project palette source', () => {
       id: 'project-1',
       projectId: null,
       taskId: null,
-      title: 'Emdash',
+      title: 'HUB',
       subtitle: '/repos/emdash',
       score: 0,
     };

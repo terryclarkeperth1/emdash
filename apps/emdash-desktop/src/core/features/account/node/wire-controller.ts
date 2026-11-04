@@ -26,7 +26,7 @@ export function createAccountWireController(
 const ACCOUNT_SIGN_IN_DISABLED = {
   success: false,
   code: 'disabled',
-  error: 'Emdash account sign-in is disabled in this build',
+  error: 'HUB account sign-in is disabled in this build',
 };
 
 async function getSession(service: EmdashAccountService, logger: Logger) {

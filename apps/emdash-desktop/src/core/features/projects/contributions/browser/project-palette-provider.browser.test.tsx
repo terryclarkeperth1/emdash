@@ -57,7 +57,7 @@ describe('project palette row', () => {
             <Row
               match={{
                 id: 'project-1',
-                title: 'Emdash',
+                title: 'HUB',
                 subtitle: '/repos/emdash',
                 relevance: { band: 'exact', score: 1 },
               }}
@@ -70,7 +70,7 @@ describe('project palette row', () => {
     });
 
     const row = host.querySelector<HTMLElement>('[cmdk-item]');
-    expect(row?.textContent).toContain('Emdash');
+    expect(row?.textContent).toContain('HUB');
     expect(row?.textContent).toContain('/repos/emdash');
     expect(row?.querySelector('svg')).not.toBeNull();
 

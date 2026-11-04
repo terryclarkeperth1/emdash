@@ -209,7 +209,7 @@ function oauthContent(
   if (isSignedIn) {
     return {
       title: `Link ${name} account`,
-      description: `Add another ${name} account to your Emdash account`,
+      description: `Add another ${name} account to your HUB account`,
       label: 'Link',
       loadingLabel: 'Linking...',
     };
@@ -217,8 +217,8 @@ function oauthContent(
 
   if (linkOnly) {
     return {
-      title: `Link ${name} to Emdash`,
-      description: `Sign in to Emdash with ${EMDASH_SIGN_IN_PROVIDER.name}, then link your ${name} account`,
+      title: `Link ${name} to HUB`,
+      description: `Sign in to HUB with ${EMDASH_SIGN_IN_PROVIDER.name}, then link your ${name} account`,
       label: 'Continue',
       loadingLabel: 'Continuing...',
     };
@@ -227,15 +227,15 @@ function oauthContent(
   if (hasAccount) {
     return {
       title: `Sign in with ${name}`,
-      description: 'Sign into your Emdash account',
+      description: 'Sign into your HUB account',
       label: 'Sign In',
       loadingLabel: 'Signing in...',
     };
   }
 
   return {
-    title: 'Sign in to Emdash',
-    description: `Create or sign into your Emdash account with ${name}`,
+    title: 'Sign in to HUB',
+    description: `Create or sign into your HUB account with ${name}`,
     label: 'Continue',
     loadingLabel: 'Continuing...',
   };

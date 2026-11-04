@@ -161,7 +161,7 @@ export const PrSelector = observer(function PrSelector({
   const authDescription =
     error?.type === 'account_not_found'
       ? `The selected ${authIntegrationName} account is no longer connected. Reconnect ${authIntegrationName} to show ${requestsName} for this repository.`
-      : `Emdash needs a connected ${authIntegrationName} account before it can show ${requestsName} for this repository.`;
+      : `HUB needs a connected ${authIntegrationName} account before it can show ${requestsName} for this repository.`;
   const connectButton = (
     <Button
       type="button"

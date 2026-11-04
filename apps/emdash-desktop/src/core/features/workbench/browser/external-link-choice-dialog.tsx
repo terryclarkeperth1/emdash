@@ -87,7 +87,7 @@ export function ExternalLinkChoiceDialog({
             onClick={() => controller.complete('emdash-browser')}
           >
             <Globe className="size-4" />
-            Open in Emdash
+            Open in HUB
           </Button>
           <Button
             className="w-full"

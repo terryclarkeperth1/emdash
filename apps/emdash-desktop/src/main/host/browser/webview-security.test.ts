@@ -8,7 +8,7 @@ import {
 } from './webview-security';
 
 describe('browser webview security helpers', () => {
-  it('recognizes only Emdash browser partitions', () => {
+  it('recognizes only HUB browser partitions', () => {
     expect(isBrowserPartition('persist:emdash-browser-profile')).toBe(true);
     expect(isBrowserPartition('persist:default')).toBe(false);
     expect(isBrowserPartition('temporary')).toBe(false);

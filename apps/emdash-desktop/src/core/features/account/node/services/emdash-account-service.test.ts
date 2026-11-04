@@ -377,7 +377,7 @@ describe('EmdashAccountService', () => {
       });
     });
 
-    it('requires an existing Emdash session', async () => {
+    it('requires an existing HUB session', async () => {
       mockCredGet.mockResolvedValue(ok(null));
 
       const error = unwrapError(await service.linkProviderAccount());
@@ -492,7 +492,7 @@ describe('EmdashAccountService', () => {
       const error = unwrapError(await service.linkProviderAccount());
       expect(error).toMatchObject({
         type: 'session_expired',
-        message: 'Your Emdash session expired. Sign in again.',
+        message: 'Your HUB session expired. Sign in again.',
       });
       expect(mockCredClear).toHaveBeenCalled();
       expect(mockKvSet).toHaveBeenCalledWith(
@@ -562,7 +562,7 @@ describe('EmdashAccountService', () => {
   });
 
   describe('renewProviderToken()', () => {
-    it('requires an Emdash session without contacting the auth server', async () => {
+    it('requires a HUB session without contacting the auth server', async () => {
       mockCredGet.mockResolvedValue(ok(null));
 
       const error = unwrapError(await service.renewProviderToken('gitlab', '7'));
@@ -612,7 +612,7 @@ describe('EmdashAccountService', () => {
       });
     });
 
-    it('clears an expired Emdash session', async () => {
+    it('clears an expired HUB session', async () => {
       const accountCleared = vi.fn();
       service.on('accountCleared', accountCleared);
       mockCredGet.mockResolvedValue(ok('session-abc'));

@@ -111,12 +111,12 @@ export function createEmdashOAuthRenewer(renewToken: RenewEmdashProviderToken): 
         case 'session_expired':
           return err({
             type: 'unavailable',
-            message: `Sign in to Emdash to keep ${name} connected.`,
+            message: `Sign in to HUB to keep ${name} connected.`,
           });
         case 'provider_account_not_linked':
           return err({
             type: 'rejected',
-            message: `${name} is no longer linked to your Emdash account. Reconnect ${name}.`,
+            message: `${name} is no longer linked to your HUB account. Reconnect ${name}.`,
           });
         default:
           return err({

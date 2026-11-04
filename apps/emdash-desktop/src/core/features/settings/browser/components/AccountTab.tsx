@@ -34,7 +34,7 @@ export function AccountTab() {
         toast.error('Sign in failed', { description: message });
         return;
       }
-      toast('Signed in to Emdash', {
+      toast('Signed in to HUB', {
         description: result.user
           ? `Connected as ${result.user.name?.trim() || result.user.username}`
           : 'Signed in',
@@ -57,8 +57,8 @@ export function AccountTab() {
 
   const handleSignOut = () => {
     void openConfirmSignOut({
-      title: 'Sign out of Emdash?',
-      description: 'You will need to sign in again to reconnect your Emdash account.',
+      title: 'Sign out of HUB?',
+      description: 'You will need to sign in again to reconnect your HUB account.',
       confirmLabel: 'Sign Out',
       variant: 'default',
     }).then((outcome) => {
@@ -112,7 +112,7 @@ export function AccountTab() {
         <div>
           <p className="text-sm font-medium text-foreground">Session expired</p>
           <p className="text-muted-foreground text-xs">
-            Sign in again to reconnect your Emdash account.
+            Sign in again to reconnect your HUB account.
           </p>
         </div>
         {error && <p className="text-destructive text-xs">{error}</p>}
@@ -136,9 +136,9 @@ export function AccountTab() {
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <p className="text-sm font-medium text-foreground">Emdash Account</p>
+        <p className="text-sm font-medium text-foreground">HUB Account</p>
         <p className="text-muted-foreground text-xs">
-          Create an Emdash account to automatically connect GitHub using OAuth2.
+          Create a HUB account to automatically connect GitHub using OAuth2.
         </p>
       </div>
       {error && <p className="text-destructive text-xs">{error}</p>}

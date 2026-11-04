@@ -159,13 +159,13 @@ describe('createEmdashOAuthRenewer', () => {
     );
   });
 
-  it('asks to sign in to Emdash when the session is missing, and retries later', async () => {
+  it('asks to sign in to HUB when the session is missing, and retries later', async () => {
     const renewed = await createEmdashOAuthRenewer(async () =>
       err({ type: 'not_signed_in', message: 'signed out' })
     )('gitlab', account, 0);
 
     expect(renewed).toEqual(
-      err({ type: 'unavailable', message: 'Sign in to Emdash to keep GitLab connected.' })
+      err({ type: 'unavailable', message: 'Sign in to HUB to keep GitLab connected.' })
     );
   });
 

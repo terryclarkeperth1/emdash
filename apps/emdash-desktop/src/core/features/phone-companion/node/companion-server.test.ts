@@ -111,7 +111,7 @@ describe('companion server', () => {
     const page = await fetch(`${base}/?t=${TOKEN}`);
     expect(page.status).toBe(200);
     expect(page.headers.get('content-security-policy')).toContain("default-src 'none'");
-    expect(await page.text()).toContain('<title>Emdash</title>');
+    expect(await page.text()).toContain('<title>HUB</title>');
 
     alerts.push(
       {

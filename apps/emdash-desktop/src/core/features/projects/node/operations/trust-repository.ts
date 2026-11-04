@@ -37,7 +37,7 @@ export async function trustProjectRepository(
       return err({
         type: 'unsupported',
         message:
-          'The Emdash workspace server on this machine is too old to trust repositories. Update it, or run the command on that machine.',
+          'The HUB workspace server on this machine is too old to trust repositories. Update it, or run the command on that machine.',
       });
     }
     throw error;

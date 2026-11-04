@@ -39,7 +39,7 @@ export function UntrustedRepositoryNotice({
       title: 'Trust this repository?',
       description: (
         <div className="flex flex-col gap-3">
-          <p>Emdash will run this command on {hostLabel}:</p>
+          <p>HUB will run this command on {hostLabel}:</p>
           <CommandBlock command={command} />
           <p className="text-foreground-muted">
             This changes your global Git config, so Git, agents, and your terminal will open this

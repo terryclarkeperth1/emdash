@@ -316,7 +316,7 @@ describe('IntegrationAccountStore credential refresh', () => {
       const renew = vi
         .fn<CredentialRenewer>()
         .mockResolvedValueOnce(
-          err({ type: 'unavailable', message: 'Sign in to Emdash to keep GitLab connected.' })
+          err({ type: 'unavailable', message: 'Sign in to HUB to keep GitLab connected.' })
         )
         .mockResolvedValueOnce(ok(serverIssued(NOW + 7_200_000, '-2')));
       store.setRenewer('emdash_oauth', renew);
@@ -324,7 +324,7 @@ describe('IntegrationAccountStore credential refresh', () => {
 
       expect(await store.getAccount('gitlab', ACCOUNT_ID)).toMatchObject({
         credentials: serverIssued(NOW + 60_000),
-        renewalError: 'Sign in to Emdash to keep GitLab connected.',
+        renewalError: 'Sign in to HUB to keep GitLab connected.',
       });
       const renewed = await store.getAccount('gitlab', ACCOUNT_ID);
 

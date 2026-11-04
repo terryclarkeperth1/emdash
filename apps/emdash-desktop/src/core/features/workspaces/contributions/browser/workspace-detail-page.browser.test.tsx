@@ -44,7 +44,7 @@ vi.mock('../../api/browser/use-workspace-rows', () => ({
     workspaceQuery: { isLoading: false, isError: false },
     usageQuery: { isLoading: false, isFetching: false },
     rows: state.rows,
-    group: { project: { id: 'project-1', name: 'Emdash' }, warnings: [], workspaces: state.rows },
+    group: { project: { id: 'project-1', name: 'HUB' }, warnings: [], workspaces: state.rows },
   }),
 }));
 

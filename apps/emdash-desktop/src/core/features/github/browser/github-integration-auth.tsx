@@ -30,8 +30,8 @@ export function GitHubIntegrationAuth(props: IntegrationAuthUiProps) {
       toast('GitHub CLI accounts imported', {
         description:
           result.importedAccountIds.length === 1
-            ? '1 account is available in Emdash.'
-            : `${result.importedAccountIds.length} accounts are available in Emdash.`,
+            ? '1 account is available in HUB.'
+            : `${result.importedAccountIds.length} accounts are available in HUB.`,
       });
       onSuccess();
     } finally {

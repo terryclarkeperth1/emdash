@@ -11,7 +11,7 @@ import {
 describe('buildWorkspaceItems', () => {
   it('aggregates one item per project from the root row and its worktrees', () => {
     const items = buildWorkspaceItems([
-      group('project-1', 'Emdash', [
+      group('project-1', 'HUB', [
         joined(workspaceRow({ kind: 'root', path: '/repo', workspaceId: 'root-1' })),
         joined(
           workspaceRow({
@@ -36,7 +36,7 @@ describe('buildWorkspaceItems', () => {
     expect(items).toEqual([
       {
         id: 'project-1',
-        name: 'Emdash',
+        name: 'HUB',
         path: '/repo',
         kind: 'repository',
         status: 'active',
@@ -50,7 +50,7 @@ describe('buildWorkspaceItems', () => {
 
   it('falls back to the first row and project name when no root row exists', () => {
     const items = buildWorkspaceItems([
-      group('project-1', 'Emdash', [joined(workspaceRow({ path: '/repo/task-a' }))]),
+      group('project-1', 'HUB', [joined(workspaceRow({ path: '/repo/task-a' }))]),
       group('project-2', 'Empty', []),
     ]);
 
@@ -68,7 +68,7 @@ describe('createWorkspacesListView', () => {
     expect(store.visibleItems).toEqual([]);
 
     runInAction(() =>
-      box.set([item('a', 'Emdash', '/repos/emdash'), item('b', 'Docs', '/repos/docs')])
+      box.set([item('a', 'HUB', '/repos/emdash'), item('b', 'Docs', '/repos/docs')])
     );
     expect(store.visibleItems.map((entry) => entry.id)).toEqual(['a', 'b']);
 

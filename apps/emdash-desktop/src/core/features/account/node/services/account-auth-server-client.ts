@@ -128,7 +128,7 @@ export class AccountAuthServerClient {
       return err({
         type: 'provider_account_not_linked',
         provider,
-        message: 'This account is no longer linked to your Emdash account.',
+        message: 'This account is no longer linked to your HUB account.',
       });
     }
     if (!response.ok) {

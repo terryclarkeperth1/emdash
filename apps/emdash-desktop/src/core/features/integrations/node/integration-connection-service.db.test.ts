@@ -125,7 +125,7 @@ describe('IntegrationConnectionService account identity', () => {
     verify.mockResolvedValue({
       connected: true,
       account: { id: 'bot-1' },
-      displayName: 'Emdash',
+      displayName: 'HUB',
       credentials: { apiToken: 'normalized-token' },
     });
 
@@ -137,7 +137,7 @@ describe('IntegrationConnectionService account identity', () => {
 
     expect(await credentials.getAccount('notion', result.accountId)).toEqual({
       accountId: result.accountId,
-      displayName: 'Emdash',
+      displayName: 'HUB',
       identity: { id: 'bot-1', scope: 'notion' },
       credentials: { apiToken: 'normalized-token' },
     });

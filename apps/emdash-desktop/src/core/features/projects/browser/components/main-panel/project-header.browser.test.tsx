@@ -13,7 +13,7 @@ const state = vi.hoisted(() => ({
   project: {
     type: 'local' as 'local' | 'ssh',
     id: 'project-1',
-    name: 'Emdash',
+    name: 'HUB',
     path: '/repos/emdash',
     baseRef: 'main',
     repositoryWorkspaceId: null,
@@ -97,7 +97,7 @@ describe('ProjectHeader', () => {
   it('shows local Project identity and preserves repository, Open In, and remove actions', async () => {
     await act(async () => root.render(<ProjectHeader projectId="project-1" />));
 
-    expect(host.querySelector('h1')?.textContent).toBe('Emdash');
+    expect(host.querySelector('h1')?.textContent).toBe('HUB');
     const identityIcon = host.querySelector('[data-severity="neutral"]');
     expect(identityIcon?.querySelector('.lucide-folder-open')).not.toBeNull();
     expect(host.querySelector('.lucide-folder-input')).toBeNull();
@@ -120,7 +120,7 @@ describe('ProjectHeader', () => {
     await act(async () => remove?.click());
     expect(mocks.confirmDeleteProject).toHaveBeenCalledWith({
       projectId: 'project-1',
-      projectLabel: 'Emdash',
+      projectLabel: 'HUB',
     });
   });
 
@@ -136,7 +136,7 @@ describe('ProjectHeader', () => {
     await act(async () => rename?.click());
     expect(mocks.openRenameProject).toHaveBeenCalledWith({
       projectId: 'project-1',
-      currentName: 'Emdash',
+      currentName: 'HUB',
     });
     expect(mocks.confirmDeleteProject).not.toHaveBeenCalled();
   });

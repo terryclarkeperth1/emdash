@@ -26,13 +26,13 @@ describe('checkIntegrationConnection', () => {
       noopLogger,
       async () => ({
         credentials,
-        renewalError: 'Sign in to Emdash to keep GitLab connected.',
+        renewalError: 'Sign in to HUB to keep GitLab connected.',
       })
     );
 
     expect(status).toMatchObject({
       connected: false,
-      error: 'Sign in to Emdash to keep GitLab connected.',
+      error: 'Sign in to HUB to keep GitLab connected.',
     });
   });
 
@@ -48,6 +48,6 @@ describe('checkIntegrationConnection', () => {
 
     expect(status.connected).toBe(false);
     expect(status.error).toBeTruthy();
-    expect(status.error).not.toContain('Emdash');
+    expect(status.error).not.toContain('HUB');
   });
 });

@@ -113,7 +113,7 @@ export class EmdashAccountService implements Hookable<AccountServiceHooks> {
       return err({
         type: 'unsupported_provider',
         provider,
-        message: `Sign in to Emdash with ${EMDASH_SIGN_IN_PROVIDER.name}, then link ${provider}.`,
+        message: `Sign in to HUB with ${EMDASH_SIGN_IN_PROVIDER.name}, then link ${provider}.`,
       });
     }
     return await ResultUtil.fromAsync(this.oauthClient.signIn(provider))
@@ -214,7 +214,7 @@ export class EmdashAccountService implements Hookable<AccountServiceHooks> {
     const sessionToken = await this.sessionStore.ensureTokenLoaded();
     if (!sessionToken.success) return sessionToken;
     if (!sessionToken.data) {
-      return err({ type: 'not_signed_in', message: 'You are signed out of Emdash.' });
+      return err({ type: 'not_signed_in', message: 'You are signed out of HUB.' });
     }
 
     const raw = await this.authServerClient.getProviderToken(

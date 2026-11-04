@@ -15,7 +15,7 @@ import type { LocalProject } from '@core/primitives/projects/api';
 const project: LocalProject = {
   type: 'local',
   id: 'project-1',
-  name: 'Emdash',
+  name: 'HUB',
   path: '/home/jona/emdash/repositories/emdash',
   baseRef: 'main',
   repositoryWorkspaceId: null,
