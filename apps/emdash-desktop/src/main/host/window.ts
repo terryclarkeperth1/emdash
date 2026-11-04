@@ -1,8 +1,9 @@
 import { join } from 'node:path';
 import { app, BrowserWindow, nativeTheme } from 'electron';
 import devIcon from '@/assets/images/emdash/emdash-dev.png?asset';
+import devTaskbarIcon from '@/assets/images/emdash/hub-dev.ico?asset';
 import { desktopHostEvents } from '@core/features/workbench/node';
-import { PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
+import { APP_ID, PRODUCT_NAME } from '@core/primitives/app-identity/api/app-identity';
 import type { Theme } from '@core/primitives/app-settings/api';
 import { recordWindowVisible } from '@main/bootstrap/core/boot-report';
 import { reportBootSuccessSignal } from '@main/bootstrap/core/boot-status';
@@ -69,6 +70,11 @@ export function createMainWindow(): BrowserWindow {
     ...(process.platform === 'linux' ? { frame: false } : {}),
     show: false,
   });
+  // Dev runs the bare electron.exe, so Windows shows Electron's atom on the taskbar;
+  // point this window's taskbar entry at the HUB icon instead.
+  if (import.meta.env.DEV && process.platform === 'win32') {
+    mainWindow.setAppDetails({ appId: APP_ID, appIconPath: devTaskbarIcon, appIconIndex: 0 });
+  }
   watchWindow(mainWindow);
   mainWindow.webContents.once('did-finish-load', () => {
     log.info('boot-timeline', {
