@@ -1,7 +1,22 @@
 {
   "schema_id": "testkit-project.v2",
   "schema_version": 2,
-  "native_tests": [],
+  "native_tests": [
+    {
+      "id": "linux-suite",
+      "kind": "structured_command",
+      "lanes": {
+        "full": {
+          "argv": [
+            "node",
+            "{project}/tooling/scripts/linux-suite.mjs"
+          ],
+          "timeout_seconds": 1800,
+          "owns_js_tests": true
+        }
+      }
+    }
+  ],
   "stored_code": [
     "apps/emdash-desktop/src/core/features/projects/browser/components/add-project-modal/untrusted-repository-notice.browser.test.tsx",
     "apps/emdash-desktop/src/core/features/workspaces/contributions/browser/workspace-detail-page.browser.test.tsx",

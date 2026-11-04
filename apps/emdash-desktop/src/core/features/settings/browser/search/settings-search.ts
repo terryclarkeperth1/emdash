@@ -222,6 +222,13 @@ export const SETTINGS_SEARCH_INDEX: SettingsSearchEntry[] = [
     description: 'Subscription limits for Codex and Claude Code accounts on all machines.',
     keywords: ['limits', 'quota', 'subscription', 'account', 'codex', 'claude', 'reset'],
   },
+  {
+    id: 'phone-companion',
+    label: 'Phone companion',
+    tab: 'phone-companion',
+    description: 'Follow agent turns and replies from your phone.',
+    keywords: ['phone', 'mobile', 'companion', 'remote', 'notifications'],
+  },
 
   // System
   {

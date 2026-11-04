@@ -15,12 +15,12 @@ const packageFile = fileURLToPath(new URL('../../../package.json', import.meta.u
 const projectDir = dirname(packageFile);
 
 describe.each([
-  { channel: 'stable', baseConfig: stableConfig, desktopId: 'Emdash', productName: 'Emdash' },
+  { channel: 'stable', baseConfig: stableConfig, desktopId: 'Emdash', productName: 'HUB' },
   {
     channel: 'canary',
     baseConfig: canaryConfig,
     desktopId: 'emdash-canary',
-    productName: 'Emdash Canary',
+    productName: 'HUB Canary',
   },
 ])('$channel Linux desktop identity', ({ channel, baseConfig, desktopId, productName }) => {
   it.each(['local', 'release'])('matches the %s launcher on Wayland and X11', async (mode) => {
