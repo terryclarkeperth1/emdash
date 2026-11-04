@@ -1,3 +1,4 @@
+import { phoneCompanionSettingsPage } from '@core/features/phone-companion/contributions/settings-page';
 import { promptsSettingsPage } from '@core/features/library/contributions/settings-page';
 import {
   conversationsSettingsPage,
@@ -27,6 +28,7 @@ export const settingsPageContributions = [
   repositorySettingsPage,
   promptsSettingsPage,
   usageSettingsPage,
+  phoneCompanionSettingsPage,
   systemSettingsPage,
   localWorkspacesSettingsPage,
   conversationsSettingsPage,

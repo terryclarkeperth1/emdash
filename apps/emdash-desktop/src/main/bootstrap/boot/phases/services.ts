@@ -8,6 +8,8 @@ import { integrationPluginRegistry } from '@emdash/plugins/integrations';
 import { pullRequestsPluginRegistry } from '@emdash/plugins/pull-requests';
 import { runWithTimeout } from '@emdash/shared/scheduling';
 import { peek } from '@emdash/wire/state';
+import { networkInterfaces } from 'node:os';
+import { join } from 'node:path';
 import { app, powerMonitor } from 'electron';
 import { AccountAuthServerClient } from '@core/features/account/node/services/account-auth-server-client';
 import { AccountOAuthClient } from '@core/features/account/node/services/account-oauth-client';
@@ -93,6 +95,12 @@ import { TaskSessionLaunchContextResolver } from '@core/features/tasks/api/node/
 import { TaskSessionManager } from '@core/features/tasks/api/node/task-session-manager';
 import { installAutomationTelemetry } from '@core/features/telemetry/node/automation-telemetry';
 import { installTaskTelemetry } from '@core/features/telemetry/node/task-telemetry';
+import { CompanionService } from '@core/features/phone-companion/node/companion-service';
+import { CompanionStore } from '@core/features/phone-companion/node/companion-store';
+import {
+  createCompanionSource,
+  describeConversation,
+} from '@core/features/phone-companion/node/companion-source';
 import { createUsageOverview } from '@core/features/usage/node/usage-overview';
 import { desktopHostEvents } from '@core/features/workbench/node/event-host';
 import {
@@ -198,6 +206,7 @@ export type ServicesBundle = {
   readonly taskService: TaskService;
   readonly taskSessions: TaskSessionManager;
   readonly usage: ReturnType<typeof createUsageOverview>;
+  readonly phoneCompanion: CompanionService;
   readonly workspacePlacement: WorkspacePlacementResolver;
   readonly conversationSync: ConversationSyncService;
   readonly reconcileSweep: ReconcileSweepService;
@@ -854,6 +863,23 @@ export async function bootServices(
   void sessionHygieneSweep.runNow().catch((error) => {
     log.warn('session hygiene sweep failed', { error: String(error) });
   });
+  const phoneCompanion = new CompanionService({
+    store: new CompanionStore(join(app.getPath('userData'), 'phone-companion.json')),
+    source: createCompanionSource(db, {
+      sendInput: async (conversationId, data) => {
+        const local = await runtimes.client(LOCAL_HOST_REF);
+        if (!local.success) return { success: false };
+        const result = await local.data.tuiAgents.sendInput({ conversationId, data });
+        return { success: result.success };
+      },
+    }),
+    describe: (event) => describeConversation(db, event.conversationId),
+    onAgentEvent: (handler) => agentStatusService.on('agent:event', handler),
+    networkInterfaces,
+    logger: log,
+  });
+  appScope.add(() => phoneCompanion.dispose());
+  void phoneCompanion.start();
   return {
     account: accountService,
     automations: automationsService,
@@ -876,6 +902,7 @@ export async function bootServices(
     taskService,
     taskSessions: taskSessionManager,
     usage,
+    phoneCompanion,
     workspacePlacement,
     conversationSync,
     reconcileSweep,

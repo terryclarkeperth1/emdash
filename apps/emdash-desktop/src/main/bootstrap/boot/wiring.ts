@@ -133,6 +133,7 @@ export function createDesktopWireOptions(
     },
     updateOperations,
     usage: services.usage,
+    phoneCompanion: services.phoneCompanion,
     workspaceIdentity: database.workspaceIdentity,
     workspacePlacement: services.workspacePlacement,
     workspaces: {

@@ -10,6 +10,7 @@ export const settingsPageTabSchema = z.enum([
   'repository',
   'prompts',
   'usage',
+  'phone-companion',
   'system',
   'workspaces-local',
   'conversations',

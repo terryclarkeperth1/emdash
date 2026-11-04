@@ -23,6 +23,10 @@ import { sourceControlContract, sourceControlDomain } from '@core/features/sourc
 import { tasksDomain, tasksWireContract } from '@core/features/tasks/api';
 import { terminalsContract, terminalsDomain } from '@core/features/terminals/api';
 import { updatesContract, updatesDomain } from '@core/features/updates/api';
+import {
+  phoneCompanionContract,
+  phoneCompanionDomain,
+} from '@core/features/phone-companion/api/contract';
 import { usageContract, usageDomain } from '@core/features/usage/api/contract';
 import {
   lifecycleScriptsDomain,
@@ -51,6 +55,7 @@ import { sshContract, sshDomain } from '@core/services/ssh/api';
 
 export const desktopDomainContracts = {
   [usageDomain]: usageContract,
+  [phoneCompanionDomain]: phoneCompanionContract,
   [accountDomain]: accountContract,
   [agentsDomain]: agentsContract,
   [appSettingsDomain]: appSettingsContract,

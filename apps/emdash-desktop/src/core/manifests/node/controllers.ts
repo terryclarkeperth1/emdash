@@ -69,6 +69,8 @@ import {
   createUpdatesWireController,
   type UpdateOperations,
 } from '@core/features/updates/node/wire-controller';
+import type { CompanionService } from '@core/features/phone-companion/node/companion-service';
+import { createPhoneCompanionWireController } from '@core/features/phone-companion/node/wire-controller';
 import type { UsageOverviewSource } from '@core/features/usage/node/usage-overview';
 import { createUsageWireController } from '@core/features/usage/node/wire-controller';
 import {
@@ -165,6 +167,7 @@ export type DesktopControllerContext = {
   readonly terminalShell: CreateTerminalsWireControllerOptions['terminalShell'];
   readonly updateOperations: UpdateOperations;
   readonly usage: UsageOverviewSource;
+  readonly phoneCompanion: CompanionService;
   readonly workspaceIdentity: WorkspaceIdentityService;
   readonly workspacePlacement: WorkspacePlacementResolver;
   readonly workspaces: Omit<CreateWorkspacesWireControllerOptions, 'db' | 'mutations'>;
@@ -438,6 +441,9 @@ export const desktopNodeControllers = {
   },
   usage: {
     create: ({ scope, usage }) => createUsageWireController({ scope, usage }),
+  },
+  phoneCompanion: {
+    create: ({ phoneCompanion }) => createPhoneCompanionWireController(phoneCompanion),
   },
   hosts: {
     create: ({ hostAvailability, hosts, ssh }) =>
