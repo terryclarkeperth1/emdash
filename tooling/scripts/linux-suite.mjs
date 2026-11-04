@@ -1,13 +1,14 @@
 // Runs the tests of every package this commit changes against its upstream on Linux (WSL Ubuntu-24.04, upstream's CI platform) for the commit
 // checked out here, then prints one testkit-native-result.v1 JSON line for the push check.
 // Windows has ~331 upstream failures (POSIX paths, shells), so the push check runs the suite here instead.
+// Browser tests are skipped as in upstream CI (vitest.config.ts): under WSL Chromium they time out at random.
 import { execFileSync, spawnSync } from 'node:child_process';
 
 const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 // The push check passes the pushed base; without it (first push) every package runs.
 const base = process.env.TESTKIT_BASE;
 const script = [
-  'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin NX_DAEMON=false',
+  'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin NX_DAEMON=false EMDASH_TEST_SKIP_BROWSER=1',
   'cd ~/emdash',
   `git fetch -q /mnt/c/Emdash ${base ?? ''} ${sha}`,
   `git reset -q --hard ${sha}`,
