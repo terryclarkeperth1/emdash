@@ -28,6 +28,8 @@ export type BrowserWebviewElement = HTMLElement & {
   stop(): void;
   loadURL(url: string): Promise<void> | void;
   setZoomFactor(factor: number): void;
+  executeJavaScript(code: string): Promise<unknown>;
+  capturePage(rect?: { x: number; y: number; width: number; height: number }): Promise<{ toDataURL(): string }>;
   addEventListener<K extends keyof BrowserWebviewEventMap>(
     type: K,
     listener: (event: BrowserWebviewEventMap[K]) => void
@@ -51,6 +53,8 @@ export type BrowserWebviewAdapter = {
   loadUrl(url: string): Promise<void>;
   setZoomFactor(factor: number): void;
   focus(): void;
+  executeJavaScript(code: string): Promise<unknown>;
+  capturePageDataUrl(rect?: { x: number; y: number; width: number; height: number }): Promise<string>;
 };
 
 export function createBrowserWebviewAdapter(webview: BrowserWebviewElement): BrowserWebviewAdapter {
@@ -69,5 +73,7 @@ export function createBrowserWebviewAdapter(webview: BrowserWebviewElement): Bro
     },
     setZoomFactor: (factor: number) => webview.setZoomFactor(factor),
     focus: () => webview.focus(),
+    executeJavaScript: (code: string) => webview.executeJavaScript(code),
+    capturePageDataUrl: async (rect) => (await webview.capturePage(rect)).toDataURL(),
   };
 }

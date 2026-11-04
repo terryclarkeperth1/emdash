@@ -13,6 +13,7 @@ import {
   Square,
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { DesignModeButton } from '@core/features/browser/design-mode/design-mode-button';
 import { browserSessionStore } from '@core/features/browser/api/browser/browser-session-store';
 import { getBrowserClient } from '@core/features/browser/api/browser/client';
 import { useAppSettingsKey } from '@core/features/settings/api/browser/use-app-settings-key';
@@ -225,6 +226,10 @@ export function BrowserToolbar({
           )}
         />
       </ToolbarIconButton>
+      <DesignModeButton
+        adapter={adapter}
+        disabled={session.currentUrl === BROWSER_DEFAULT_URL || session.isLoading}
+      />
       <DropdownMenu.Root>
         <DropdownMenu.Trigger
           render={
