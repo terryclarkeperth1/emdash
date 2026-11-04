@@ -114,12 +114,24 @@ describe('companion server', () => {
     expect(await page.text()).toContain('<title>Emdash</title>');
 
     alerts.push(
-      { type: 'stop', projectId: 'p', taskId: 't', conversationId: 'c1', timestamp: 1, payload: {} },
+      {
+        type: 'stop',
+        projectId: 'p',
+        taskId: 't',
+        conversationId: 'c1',
+        timestamp: 1,
+        payload: { lastAssistantMessage: ' Fixed the bug. ' },
+      },
       'Fix bug - Claude'
     );
     const state = await (await fetch(`${base}/api/state?since=0`, { headers: auth })).json();
-    expect(state.sessions).toEqual([session]);
-    expect(state.alerts).toMatchObject([{ kind: 'done', conversationId: 'c1' }]);
+    expect(state.sessions).toEqual([
+      { ...session, activityAt: expect.any(Number), lastReply: 'Fixed the bug.' },
+    ]);
+    expect(state.alerts).toMatchObject([
+      { kind: 'done', conversationId: 'c1', text: 'Fixed the bug.' },
+    ]);
+    expect(alerts.decorate({ ...session, status: 'awaiting-input' }).status).toBe('completed');
     expect(state.lastAlertId).toBe(1);
   });
 

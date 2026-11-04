@@ -90,7 +90,7 @@ export async function startCompanionServer(
     if (req.method === 'GET' && url.pathname === '/api/state') {
       const since = Number(url.searchParams.get('since') ?? 0) || 0;
       return sendJson(res, 200, {
-        sessions: await options.source.listSessions(),
+        sessions: (await options.source.listSessions()).map((s) => options.alerts.decorate(s)),
         alerts: options.alerts.since(since),
         lastAlertId: options.alerts.lastId,
       });

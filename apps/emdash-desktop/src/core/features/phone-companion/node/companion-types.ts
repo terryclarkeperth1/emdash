@@ -10,6 +10,10 @@ export type CompanionSession = {
   /** Only PTY (TUI) conversations accept follow-up text. */
   canMessage: boolean;
   updatedAt: string | null;
+  /** Claude's last reply, from the finished-turn hook (this app run only). */
+  lastReply?: string;
+  /** Epoch ms of the latest alert for this session (this app run only). */
+  activityAt?: number;
 };
 
 export type CompanionAlertKind = 'done' | 'needs-input' | 'error';

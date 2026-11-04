@@ -1,6 +1,13 @@
 import type { AgentEvent } from '@core/primitives/agents/api';
 import { isAttentionNotification } from '@core/primitives/agents/api';
-import type { CompanionAlert, CompanionAlertKind } from './companion-types';
+import type {
+  CompanionAlert,
+  CompanionAlertKind,
+  CompanionSession,
+} from './companion-types';
+
+const MAX_REPLY_LENGTH = 2000;
+const ALERT_REPLY_LENGTH = 140;
 
 export function alertKind(event: AgentEvent): CompanionAlertKind | null {
   if (event.type === 'stop') return 'done';
@@ -15,8 +22,8 @@ export function alertKind(event: AgentEvent): CompanionAlertKind | null {
 export class AlertFeed {
   private nextId = 1;
   private items: CompanionAlert[] = [];
-  /** Last alert kind per conversation; Claude's idle notice after a finished turn repeats it. */
-  private readonly lastKind = new Map<string, CompanionAlertKind>();
+  /** Latest alert per conversation; Claude's idle notice after a finished turn repeats it. */
+  private readonly latest = new Map<string, { kind: CompanionAlertKind; at: number; reply?: string }>();
 
   constructor(
     private readonly capacity = 100,
@@ -28,11 +35,12 @@ export class AlertFeed {
     if (!kind) return null;
     const idle =
       event.type === 'notification' && event.payload.notificationType === 'idle_prompt';
-    if (idle && this.lastKind.get(event.conversationId) === 'done') return null;
-    this.lastKind.set(event.conversationId, kind);
+    if (idle && this.latest.get(event.conversationId)?.kind === 'done') return null;
+    const reply = event.payload.lastAssistantMessage?.trim().slice(0, MAX_REPLY_LENGTH) || undefined;
+    this.latest.set(event.conversationId, { kind, at: this.now(), ...(reply ? { reply } : {}) });
     const text =
       kind === 'done'
-        ? 'Finished'
+        ? (reply?.slice(0, ALERT_REPLY_LENGTH) ?? 'Finished')
         : kind === 'error'
           ? (event.payload.message ?? 'Failed')
           : (event.payload.message ?? 'Needs your input');
@@ -47,6 +55,19 @@ export class AlertFeed {
     this.items.push(alert);
     if (this.items.length > this.capacity) this.items.splice(0, this.items.length - this.capacity);
     return alert;
+  }
+
+  /** Adds the last reply and event time; a finished turn reads as done, not as Claude's idle notice. */
+  decorate(session: CompanionSession): CompanionSession {
+    const latest = this.latest.get(session.id);
+    if (!latest) return session;
+    return {
+      ...session,
+      status:
+        session.status === 'awaiting-input' && latest.kind === 'done' ? 'completed' : session.status,
+      activityAt: latest.at,
+      ...(latest.reply ? { lastReply: latest.reply } : {}),
+    };
   }
 
   since(id: number): CompanionAlert[] {
