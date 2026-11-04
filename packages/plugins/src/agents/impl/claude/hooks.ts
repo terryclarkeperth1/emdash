@@ -1,4 +1,4 @@
-import type { CanonicalHookEvent } from '@emdash/core/services/agent-plugins/api/plugins';
+import type { CanonicalHookEvent, PluginFs } from '@emdash/core/services/agent-plugins/api/plugins';
 import {
   buildNestedJsonHookConfig,
   configFile,
@@ -9,6 +9,7 @@ import {
   makeStdinHookCommand,
   type ConfigRootContext,
 } from '@emdash/core/services/agent-plugins/api/plugins/helpers';
+import { hasLeanSettings, writeLeanSettings } from './lean-settings';
 
 export const CLAUDE_SETTINGS_PATH = 'settings.json';
 
@@ -63,13 +64,28 @@ function parseClaudeNotification(body: Record<string, unknown>): CanonicalHookEv
 }
 
 export function buildClaudeHookConfig() {
+  const hookConfig = buildNestedJsonHookConfig(CLAUDE_SETTINGS_PATH, [
+    { hookKey: 'SessionStart', command: makeStdinHookCommand('session-start') },
+    { hookKey: 'UserPromptSubmit', command: makeStdinHookCommand('start') },
+    { hookKey: 'Notification', command: makeStdinHookCommand('notification') },
+    { hookKey: 'Stop', command: makeStdinHookCommand('stop') },
+  ]);
   return {
-    ...buildNestedJsonHookConfig(CLAUDE_SETTINGS_PATH, [
-      { hookKey: 'SessionStart', command: makeStdinHookCommand('session-start') },
-      { hookKey: 'UserPromptSubmit', command: makeStdinHookCommand('start') },
-      { hookKey: 'Notification', command: makeStdinHookCommand('notification') },
-      { hookKey: 'Stop', command: makeStdinHookCommand('stop') },
-    ]),
+    ...hookConfig,
+    async readHooks(fs: PluginFs) {
+      const hooks = await hookConfig.readHooks(fs);
+      return (await hasLeanSettings(fs, CLAUDE_SETTINGS_PATH)) ? hooks : [];
+    },
+    async writeHooks(fs: PluginFs, hooks: Parameters<typeof hookConfig.writeHooks>[1]) {
+      const paths = await hookConfig.writeHooks(fs, hooks);
+      await writeLeanSettings(fs, CLAUDE_SETTINGS_PATH);
+      return paths;
+    },
+    async getHooksInstalled(fs: PluginFs) {
+      return (
+        (await hookConfig.getHooksInstalled(fs)) && (await hasLeanSettings(fs, CLAUDE_SETTINGS_PATH))
+      );
+    },
     resolveConfigRoots: configRoots(claudeHooksRoot),
     launchArgs: (context: ConfigRootContext) => [
       '--settings',
