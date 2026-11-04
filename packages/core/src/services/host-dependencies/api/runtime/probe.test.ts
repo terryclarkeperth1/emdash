@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { IExecutionContext } from '#primitives/exec/api';
-import { probeHostElevation } from './probe';
+import { probeHostElevation, resolveAllCommandPaths, resolveCommandPath } from './probe';
 
 describe('probeHostElevation', () => {
   it('returns null on windows without probing', async () => {
@@ -60,3 +60,26 @@ function createExec(
     dispose: vi.fn(),
   };
 }
+
+describe('Windows command resolution', () => {
+  const claude = 'C:\\Users\\a\\.local\\bin\\claude.exe';
+  const shadowed = (): IExecutionContext => ({
+    root: '',
+    supportsLocalSpawn: true,
+    // A where.cmd earlier on PATH wins the bare name `where` and prints a banner first.
+    exec: vi.fn(async (command: string) =>
+      command === 'where.exe'
+        ? { stdout: `${claude}\r\n`, stderr: '' }
+        : { stdout: '# index: live  hits: 2\r\n\r\nC:\\chats\\claude\r\n', stderr: '' }
+    ),
+    execStreaming: vi.fn(),
+    dispose: vi.fn(),
+  });
+
+  it('resolves through where.exe, never a shadowing where.cmd', async () => {
+    await expect(resolveCommandPath('claude', shadowed(), 'windows')).resolves.toBe(claude);
+    await expect(resolveAllCommandPaths('claude', shadowed(), 'windows')).resolves.toEqual([
+      claude,
+    ]);
+  });
+});

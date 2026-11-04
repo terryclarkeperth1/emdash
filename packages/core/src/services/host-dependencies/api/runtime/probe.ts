@@ -13,9 +13,13 @@ function targetPlatform(platform?: Platform): Platform {
   return 'linux';
 }
 
+// A bare `where` can be shadowed by a `where.cmd` earlier on PATH (PATHEXT order); its banner is not a path.
+const WHERE = 'where.exe';
+const isAbsolutePath = (line: string) => /^(?:[A-Za-z]:[\\/]|\\\\)/.test(line);
+
 /**
  * Resolves all absolute paths for a command binary in PATH order.
- * Uses `where` on Windows (which already lists all matches) and `which -a` on
+ * Uses `where.exe` on Windows (which already lists all matches) and `which -a` on
  * macOS/Linux. Returns an empty array when the command is not found.
  *
  * The first entry is the PATH winner (same result as resolveCommandPath).
@@ -28,12 +32,12 @@ export async function resolveAllCommandPaths(
   const plat = targetPlatform(platform);
   try {
     if (plat === 'windows') {
-      const { stdout } = await ctx.exec('where', [command], { timeout: WHICH_TIMEOUT_MS });
+      const { stdout } = await ctx.exec(WHERE, [command], { timeout: WHICH_TIMEOUT_MS });
       return stdout
         .trim()
         .split('\n')
         .map((s) => s.trim())
-        .filter(Boolean);
+        .filter(isAbsolutePath);
     }
     const { stdout } = await ctx.exec('which', ['-a', command], { timeout: WHICH_TIMEOUT_MS });
     return stdout
@@ -56,10 +60,13 @@ export async function resolveCommandPath(
   ctx: IExecutionContext,
   platform?: Platform
 ): Promise<string | null> {
-  const resolveCmd = targetPlatform(platform) === 'windows' ? 'where' : 'which';
+  const resolveCmd = targetPlatform(platform) === 'windows' ? WHERE : 'which';
   try {
     const { stdout } = await ctx.exec(resolveCmd, [command], { timeout: WHICH_TIMEOUT_MS });
-    const firstLine = stdout.trim().split('\n')[0]?.trim();
+    const firstLine = stdout
+      .split('\n')
+      .map((s) => s.trim())
+      .find((s) => (targetPlatform(platform) === 'windows' ? isAbsolutePath(s) : s));
     return firstLine ?? null;
   } catch {
     return null;

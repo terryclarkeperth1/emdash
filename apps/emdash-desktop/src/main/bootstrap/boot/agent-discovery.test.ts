@@ -23,7 +23,7 @@ it('serves concurrent agent reads during slow Windows discovery within the Wire 
     root: '',
     supportsLocalSpawn: true,
     exec: vi.fn(async (command: string, args: string[] = []) => {
-      expect(command).toBe('where');
+      expect(command).toBe('where.exe');
       await new Promise((resolve) => setTimeout(resolve, 400));
       return { stdout: args[0] === 'claude' ? 'C:\\Tools\\claude.exe\r\n' : '', stderr: '' };
     }),
