@@ -15,9 +15,15 @@ if (process.env.NX_TASK_TARGET_PROJECT) {
   process.exit(0);
 }
 
+// Under `pnpm run`, re-enter pnpm through its own script with this Node: on Windows the
+// `pnpm.cmd` shim, reached through cmd, resolves the devEngines `node.CMD` shim against the
+// wrong folder ("The system cannot find the path specified").
+const pnpmScript = process.env.npm_execpath;
+const viaNode = Boolean(pnpmScript && /\.c?js$/.test(pnpmScript));
 const result = spawnSync(
-  'pnpm',
+  viaNode ? process.execPath : 'pnpm',
   [
+    ...(viaNode ? [pnpmScript] : []),
     'exec',
     'nx',
     'run-many',
@@ -26,6 +32,6 @@ const result = spawnSync(
     '--exclude',
     '@emdash/emdash-desktop,@emdash/workspace-server',
   ],
-  { stdio: 'inherit', shell: process.platform === 'win32' }
+  { stdio: 'inherit', shell: !viaNode && process.platform === 'win32' }
 );
 process.exit(typeof result.status === 'number' ? result.status : 1);
