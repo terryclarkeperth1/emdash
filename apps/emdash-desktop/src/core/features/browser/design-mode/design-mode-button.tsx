@@ -37,7 +37,8 @@ export const DesignModeButton = observer(function DesignModeButton({
       const id = activeConversationId(pane);
       if (id) return id;
     }
-    return undefined;
+    // The browser tab is usually the active tab, so fall back to any open conversation.
+    return conversations.sessions.keys().next().value as string | undefined;
   };
 
   const run = async () => {
