@@ -3,6 +3,45 @@
 // Windows has ~331 upstream failures (POSIX paths, shells), so the push check runs the suite here instead.
 // Browser tests are skipped as in upstream CI (vitest.config.ts): under WSL Chromium they time out at random.
 import { execFileSync, spawnSync } from 'node:child_process';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+// Every run resets the one WSL clone and ends with `wsl --shutdown`, so two runs at once (two pushes, a commit
+// check beside a push check) reset each other's files and kill each other's tests: random failures. One run at a time.
+const LOCK = join(tmpdir(), 'emdash-linux-suite.lock');
+const LOCK_WAIT_MS = 25 * 60 * 1000;
+const alive = (pid) => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return e.code === 'EPERM';
+  }
+};
+const deadline = Date.now() + LOCK_WAIT_MS;
+for (;;) {
+  try {
+    mkdirSync(LOCK);
+    writeFileSync(join(LOCK, 'pid'), String(process.pid));
+    break;
+  } catch (e) {
+    if (e.code !== 'EEXIST') throw e;
+    let pid = NaN;
+    try {
+      pid = Number(readFileSync(join(LOCK, 'pid'), 'utf8'));
+    } catch {}
+    if (pid && !alive(pid)) {
+      rmSync(LOCK, { recursive: true, force: true });
+      continue;
+    }
+    if (Date.now() > deadline) {
+      throw new Error(`linux-suite: another run (pid ${pid}) held ${LOCK} for ${LOCK_WAIT_MS / 1000} s`);
+    }
+    Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2000);
+  }
+}
+process.on('exit', () => rmSync(LOCK, { recursive: true, force: true }));
 
 const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 // The push check passes the pushed base; without it (first push) every package runs.
