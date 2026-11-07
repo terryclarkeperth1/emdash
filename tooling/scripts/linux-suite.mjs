@@ -73,10 +73,12 @@ function writeLcov(dir) {
   const found = wsl('bash', '-lc', "find apps packages -path '*/node_modules' -prune -o -path '*/coverage/lcov.info' -print");
   const parts = [];
   for (const file of (found.stdout ?? '').split('\n').filter(Boolean)) {
-    parts.push(repoRelative(wsl('cat', file).stdout ?? '', file.replace(/\/coverage\/lcov\.info$/, '')));
+    const lcov = repoRelative(wsl('cat', file).stdout ?? '', file.replace(/\/coverage\/lcov\.info$/, '')).trim();
+    if (lcov) parts.push(`${lcov}\n`);
   }
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, 'lcov.info'), parts.join('\n'));
+  // diff-cover rejects a blank line, so the records join with no line between them.
+  writeFileSync(join(dir, 'lcov.info'), parts.join(''));
 }
 
 const run = spawnSync('wsl', ['-d', 'Ubuntu-24.04', '--cd', '~', '--', 'bash', '-lc', script], {
