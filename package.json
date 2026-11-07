@@ -17,6 +17,9 @@
     "graph": "nx graph"
   },
   "devDependencies": {
+    "@stryker-mutator/core": "^10.1.1",
+    "@stryker-mutator/vitest-runner": "^10.1.1",
+    "@vitest/coverage-v8": "^4.1.12",
     "nx": "^23.1.2",
     "tsx": "^4.22.4"
   },

@@ -12,8 +12,7 @@
             "{project}/tooling/scripts/linux-suite.mjs"
           ],
           "timeout_seconds": 1800,
-          "selects_changed": true,
-          "owns_js_tests": true
+          "selects_changed": true
         }
       }
     }
