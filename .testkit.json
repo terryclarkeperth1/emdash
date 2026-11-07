@@ -12,7 +12,8 @@
             "{project}/tooling/scripts/linux-suite.mjs"
           ],
           "timeout_seconds": 1800,
-          "selects_changed": true
+          "selects_changed": true,
+          "native_coverage": true
         }
       }
     }

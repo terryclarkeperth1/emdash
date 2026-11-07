@@ -46,6 +46,9 @@ process.on('exit', () => rmSync(LOCK, { recursive: true, force: true }));
 const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 // The push check passes the pushed base; without it (first push) every package runs.
 const base = process.env.TESTKIT_BASE;
+// The push check sets TESTKIT_COVERAGE_DIR: vitest then writes lcov, merged below into one repo-relative lcov.info there.
+const covDir = process.env.TESTKIT_COVERAGE_DIR;
+const covArgs = covDir ? ' --skip-nx-cache -- --coverage.enabled --coverage.reporter=lcov --coverage.reportsDirectory=coverage' : '';
 const script = [
   'export PATH=$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin NX_DAEMON=false EMDASH_TEST_SKIP_BROWSER=1',
   'cd ~/emdash',
@@ -53,15 +56,35 @@ const script = [
   `git reset -q --hard ${sha}`,
   'pnpm install --frozen-lockfile --silent',
   base
-    ? `pnpm exec nx affected -t test --base=${base} --head=${sha} --output-style=static`
-    : 'pnpm exec nx run-many -t test --all --output-style=static',
+    ? `pnpm exec nx affected -t test --base=${base} --head=${sha} --output-style=static${covArgs}`
+    : 'pnpm exec nx run-many -t test --all --output-style=static' + covArgs,
 ].join(' && ');
+
+// Each package's lcov.info names files from its own folder (or by WSL path); the push check wants them from the repo root.
+export function repoRelative(lcov, pkgDir) {
+  return lcov.replace(/^SF:(.*)$/gm, (_, f) => {
+    const m = f.match(/^\/home\/[^/]+\/emdash\/(.*)$/);
+    if (m) return `SF:${m[1]}`;
+    return f.startsWith('/') ? `SF:${f}` : `SF:${pkgDir}/${f}`.replace(/\/\.\//g, '/');
+  });
+}
+function writeLcov(dir) {
+  const wsl = (...cmd) => spawnSync('wsl', ['-d', 'Ubuntu-24.04', '--cd', '~/emdash', '--', ...cmd], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, windowsHide: true });
+  const found = wsl('bash', '-lc', "find apps packages -path '*/node_modules' -prune -o -path '*/coverage/lcov.info' -print");
+  const parts = [];
+  for (const file of (found.stdout ?? '').split('\n').filter(Boolean)) {
+    parts.push(repoRelative(wsl('cat', file).stdout ?? '', file.replace(/\/coverage\/lcov\.info$/, '')));
+  }
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, 'lcov.info'), parts.join('\n'));
+}
 
 const run = spawnSync('wsl', ['-d', 'Ubuntu-24.04', '--cd', '~', '--', 'bash', '-lc', script], {
   encoding: 'utf8',
   maxBuffer: 256 * 1024 * 1024,
   windowsHide: true,
 });
+if (covDir) writeLcov(covDir);
 spawnSync('wsl', ['--shutdown'], { windowsHide: true });
 
 const out = `${run.stdout ?? ''}\n${run.stderr ?? ''}`.replace(/\x1b\[[0-9;]*m/g, '');
